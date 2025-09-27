@@ -1,0 +1,9 @@
+services:
+  nginx:
+    # stuff
+
+  node:
+    # stuff
+
+  sqlite:
+    # stuff
