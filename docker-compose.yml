@@ -1,6 +1,13 @@
 services:
   nginx:
-    # stuff
+    build:
+      context: .
+      dockerfile: ./nginx/Dockerfile
+    image: nginx
+    container_name: nginx
+    ports:
+      - "8080:80"
+    restart: always
 
   node:
     # stuff
