@@ -1,10 +1,10 @@
 services:
-  nginx:
+  app:
     build:
       context: ../app
-      dockerfile: ../infra/nginx.Dockerfile
-    image: nginx
-    container_name: nginx
+      dockerfile: ../infra/app.Dockerfile
+    image: app
+    container_name: app
     ports:
       - "8080:80"
     restart: always
