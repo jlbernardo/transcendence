@@ -19,5 +19,12 @@ services:
       - "3000:3000"
     restart: "always"
 
-  # sqlite:
-  #   # stuff
+  data:
+    build:
+      context: ../data
+      dockerfile: ../infra/data.Dockerfile
+    image: data
+    container_name: data
+    volumes:
+      - ../data:/db
+    restart: always
