@@ -9,8 +9,15 @@ services:
       - "8080:80"
     restart: always
 
-  # node:
-  #   # stuff
+  core:
+    build:
+      context: ../core
+      dockerfile: ../infra/core.Dockerfile
+    image: core
+    container_name: core
+    ports:
+      - "3000:3000"
+    restart: "always"
 
   # sqlite:
   #   # stuff

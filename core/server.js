@@ -9,7 +9,7 @@ fastify.get('/', async function handler(request, reply) {
 })
 
 try {
-	await fastify.listen({ port: 4242 })
+	await fastify.listen({ host: "0.0.0.0", port: 3000 })
 }
 catch (err) {
 	fastify.log.error("uh oh:", err)
