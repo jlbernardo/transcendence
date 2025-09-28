@@ -1,16 +1,16 @@
 services:
   nginx:
     build:
-      context: .
-      dockerfile: ./nginx/Dockerfile
+      context: ../app
+      dockerfile: ../infra/nginx.Dockerfile
     image: nginx
     container_name: nginx
     ports:
       - "8080:80"
     restart: always
 
-  node:
-    # stuff
+  # node:
+  #   # stuff
 
-  sqlite:
-    # stuff
+  # sqlite:
+  #   # stuff
