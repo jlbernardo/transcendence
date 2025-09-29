@@ -3,9 +3,11 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-     "start": "node server"
+    "start": "node server"
   },
   "dependencies": {
-    "fastify": "^5.6.1"
+    "fastify": "^5.6.1",
+    "sql-bricks": "^3.0.1",
+    "sqlite": "^5.1.1"
   }
 }

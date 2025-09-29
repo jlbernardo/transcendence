@@ -7,6 +7,8 @@ services:
     container_name: app
     ports:
       - "8080:80"
+    depends_on:
+      - core
     restart: always
 
   core:
@@ -15,8 +17,12 @@ services:
       dockerfile: ../infra/core.Dockerfile
     image: core
     container_name: core
+    volumes:
+      - data:/core/db
     ports:
       - "3000:3000"
+    depends_on:
+      - data
     restart: "always"
 
   data:
@@ -26,5 +32,13 @@ services:
     image: data
     container_name: data
     volumes:
-      - ../data:/db
+      - data:/data/db
     restart: always
+
+volumes:
+  data:
+    name: data
+    driver_opts:
+      o: bind
+      type: none
+      device: /Users/jubs/magit/trs/data
