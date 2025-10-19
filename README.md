@@ -2,8 +2,8 @@
 
 <br/>
 
-![title](./assets/title.png)
+![title](./assets/visual_identity/title.png)
 
 <br/>
 
-![register](./assets/register.png)
+![register](./assets/visual_identity/register.png)
