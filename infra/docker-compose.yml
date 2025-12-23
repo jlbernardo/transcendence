@@ -32,12 +32,3 @@ services:
       - ../core/user_service:/app
     restart: always
 
-  data:
-    build:
-      context: ../data
-      dockerfile: ../infra/data.Dockerfile
-    image: data
-    container_name: data
-    volumes:
-      - ../data:/data/db
-    restart: always

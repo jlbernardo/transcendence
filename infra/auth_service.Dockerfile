@@ -1,6 +1,6 @@
 FROM python:3.11-alpine
 
-WORKDIR /auth_service
+WORKDIR /app
 
 COPY core/auth_service/requirements.txt .
 
