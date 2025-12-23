@@ -8,22 +8,29 @@ services:
     ports:
       - "8080:80"
     depends_on:
-      - core
+      - auth_service
+      - user_service
     restart: always
 
-  core:
+  auth_service:
     build:
-      context: ../core
-      dockerfile: ../infra/core.Dockerfile
-    image: core
-    container_name: core
-    volumes:
-      - data:/core/db
+      context: ..
+      dockerfile: infra/auth_service.Dockerfile
     ports:
-      - "3000:3000"
-    depends_on:
-      - data
-    restart: "always"
+      - "8001:8001"
+    volumes:
+      - ../core/auth_service:/app
+    restart: always
+
+  user_service:
+    build:
+      context: ..
+      dockerfile: infra/user_service.Dockerfile
+    ports:
+      - "8002:8002"
+    volumes:
+      - ../core/user_service:/app
+    restart: always
 
   data:
     build:
@@ -32,13 +39,5 @@ services:
     image: data
     container_name: data
     volumes:
-      - data:/data/db
+      - ../data:/data/db
     restart: always
-
-volumes:
-  data:
-    name: data
-    driver_opts:
-      o: bind
-      type: none
-      device: /Users/jubs/magit/trs/data
