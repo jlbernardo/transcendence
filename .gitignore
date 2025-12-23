@@ -1,3 +1,14 @@
-.vscode
-**/node_modules
-**/dist
+# Vscode
+.vscode/
+
+# Node.js
+**/node_modules/
+
+# Build outputs
+**/dist/
+
+# Python
+__pycache__/
+
+# Django
+db.sqlite3
