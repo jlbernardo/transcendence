@@ -3,8 +3,10 @@ import Link from "next/link";
 export default function LandingPage() {
 	return (
 		<>
-			<div>ft_pong</div>
-			<Link href="/login">enter</Link>
+			<div className="min-h-screen flex flex-col items-center justify-center">
+				<p className="text-[200px] mb-4">ft_pong</p>
+				<Link href="/login" className="text-4xl">enter</Link>
+			</div>
 		</>
 	)
 }
