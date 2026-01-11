@@ -5,8 +5,10 @@ export default function Home() {
   return (
     <>
       <div className="grid grid-cols-12 grid-rows-24 gap-2 h-dvh">
-        <div className="row-span-1 pl-3 pt-1 pb-13 col-span-1 bg-amber-400">
-          <Link href="/profile">home</Link>
+        <div className="row-span-1 pl-3 pt-1 pb-13 col-span-1">
+          <Link href="/profile">
+            <Image src="/home.svg" alt="home" className="pt-4 ml-5" width={31} height={31} />
+          </Link>
           <br />
         </div>
         <div className="row-span-1 pl-3 pt-1 pb-13 col-span-10 bg-amber-400">
