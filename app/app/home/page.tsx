@@ -1,5 +1,7 @@
 import Link from "next/link";
+import Image from "next/image";
 import Dropdown from "@/components/Dropdown";
+import FriendList from "@/components/Friends";
 
 export default function Home() {
   return (
@@ -11,7 +13,7 @@ export default function Home() {
           </Link>
           <br />
         </div>
-        <div className="row-span-1 pl-3 pt-1 pb-13 col-span-10 bg-amber-400">
+        <div className="row-span-1 pl-3 pt-4 pb-13 col-span-10">
           {/* @ts-expect-error: marquee */}
           <marquee className="pt-2">latest news</marquee>
         </div>
@@ -42,8 +44,8 @@ export default function Home() {
             find new friends
           </div>
         </div>
-        <div className="row-span-22 row-start-3 pl-3 pt-1 mb-6 col-span-2 col-start-11 bg-amber-400">
-          social list
+        <div className="row-span-22 row-start-3 pt-1 mr-2 mb-6 col-span-2 col-start-11">
+          <FriendList />
         </div>
       </div>
     </>
