@@ -21,7 +21,31 @@
 }
 
 body {
-  background-image: url("/bg.png");
+  background-image: url("/background.gif");
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.title {
+  color: transparent;
+  background-color: rgb(239, 202, 156);
+  animation: float 3s ease-in-out infinite;
+  background-clip: text;
+  text-shadow: 4px 4px 1px rgb(241, 128, 90),
+                8px 8px 1px rgb(61, 5, 81);
+
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-30px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
 }
