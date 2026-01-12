@@ -23,6 +23,7 @@ urlpatterns = [
 
     path('api/auth/register/', views.register, name='register'),
     path('api/auth/login/', views.login, name='login'),
+    path('api/auth/logout/', views.logout, name='logout'),
 
     # test with token
     path('api/auth/profile/', views.user_profile, name='user_profile'),

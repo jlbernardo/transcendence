@@ -42,6 +42,29 @@ def login(request):
         }, status=status.HTTP_200_OK)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(['POST'])
+def logout(request):
+    """
+    User logout and token removal.
+    """
+    if not request.user.is_authenticated:
+        return Response(
+            {'error': 'Not authenticated.'},
+            status=status.HTTP_401_UNAUTHORIZED
+        )
+    
+    try:
+        request.user.auth_token.delete()
+        return Response(
+            {'message': 'Logout successful.'},
+            status=status.HTTP_200_OK
+        )
+    except:
+        return Response(
+            {'error': 'Logout failed.'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
 
 @api_view(['GET'])
 def user_profile(request):
