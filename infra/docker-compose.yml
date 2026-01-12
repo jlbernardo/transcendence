@@ -8,27 +8,17 @@ services:
     ports:
       - "8080:80"
     depends_on:
-      - auth_service
-      - user_service
+      - accounts_service
     restart: always
 
-  auth_service:
+  accounts_service:
     build:
       context: ..
-      dockerfile: infra/auth_service.Dockerfile
+      dockerfile: infra/accounts_service.Dockerfile
     ports:
-      - "8001:8001"
+      - "8000:8000"
+    environment:
+      - DEBUG=False
     volumes:
-      - ../core/auth_service:/app
+      - ../core/accounts_service:/app
     restart: always
-
-  user_service:
-    build:
-      context: ..
-      dockerfile: infra/user_service.Dockerfile
-    ports:
-      - "8002:8002"
-    volumes:
-      - ../core/user_service:/app
-    restart: always
-

@@ -1,5 +1,5 @@
 """
-URL configuration for auth_service project.
+URL configuration for accounts_service project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/5.0/topics/http/urls/
@@ -15,9 +15,15 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import path
+from accounts import views
 
 urlpatterns = [
-    path("health/", lambda r: JsonResponse({"status": "ok"})), # health for docker
-    path("auth/", include("auth.urls")), # auth-service endpoint
+    path('admin/', admin.site.urls),
+
+    path('api/auth/register/', views.register, name='register'),
+    path('api/auth/login/', views.login, name='login'),
+
+    # test with token
+    path('api/auth/profile/', views.user_profile, name='user_profile'),
 ]
