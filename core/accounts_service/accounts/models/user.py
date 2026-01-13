@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser
 
 class CustomUser(AbstractUser):
     """
-    User model that inherit from Django's AbstractUser.
+    User model that inherits from Django's AbstractUser.
     """
     email = models.EmailField(unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
