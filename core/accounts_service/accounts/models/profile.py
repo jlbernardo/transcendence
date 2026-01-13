@@ -10,7 +10,7 @@ class Profile(models.Model):
         on_delete=models.CASCADE
     )
     bio = models.TextField(blank=True)
-    avatar = models.ImageField(upload_to="avatars/", blank=True, null=True)
+    # avatar = models.ImageField(upload_to="avatars/", blank=True, null=True)
 
     def __str__(self):
         return f"Profile({self.user.email})"
