@@ -17,14 +17,16 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from accounts.views import auth
+from accounts.views import profile
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
+    # auth
     path('api/auth/register/', auth.register, name='register'),
     path('api/auth/login/', auth.login, name='login'),
     path('api/auth/logout/', auth.logout, name='logout'),
 
-    # test with token
-    path('api/auth/profile/', auth.user_profile, name='user_profile'),
+    # profile
+    path('api/profile/me/', profile.profile, name='profile'),
 ]

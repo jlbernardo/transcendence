@@ -64,18 +64,3 @@ def logout(request):
             {'error': 'Logout failed.'},
             status=status.HTTP_400_BAD_REQUEST
         )
-
-
-@api_view(['GET'])
-def user_profile(request):
-    """
-    Returns authenticated user profile.
-    Requires authentication token in header.
-    """
-    if not request.user.is_authenticated:
-        return Response(
-            {'error': 'Not authenticated.'},
-            status=status.HTTP_401_UNAUTHORIZED
-        )
-    serializer = UserSerializer(request.user)
-    return Response(serializer.data, status=status.HTTP_200_OK)

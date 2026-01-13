@@ -10,7 +10,6 @@ class UserTestCase(TestCase):
             password="SecurePass123!"
             )
         
-    # Objetivo: provar que o model salva corretamente no banco.
     def test_user_saving_correctly_in_db(self):
         """
         Test that user is being saved correctly in database
@@ -26,15 +25,12 @@ class UserTestCase(TestCase):
         """
         Test that a new user cannot be created with an existent email
         """
-        try:
+        with self.assertRaises(IntegrityError):
             CustomUser.objects.create_user(
-                email="user@example.com",
-                username="user2", 
+                email="user@example.com", 
+                username="user_duplicate", 
                 password="SecurePass123!"
             )
-            self.fail("User created with duplicated email")
-        except IntegrityError as e:
-            print(f"Error caught: {e}")
 
     def test_username_field(self):
         """
