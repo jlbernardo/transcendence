@@ -28,5 +28,6 @@ urlpatterns = [
     path('api/auth/logout/', auth.logout, name='logout'),
 
     # profile
-    path('api/profile/me/', profile.profile, name='profile'),
+    path('api/profile/', profile.profile, name='profile'),
+    path('api/profile/update/', profile.update_profile, name='update_profile'),
 ]
