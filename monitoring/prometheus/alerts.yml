@@ -1,0 +1,26 @@
+groups:
+  - name: transcendence_alerts
+    rules:
+      # Alerta se algum serviço (Django ou Go) cair
+      - alert: ServiceDown
+        expr: up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Serviço {{ $labels.instance }} fora do ar"
+          description: "O job {{ $labels.job }} parou de responder há mais de 1 minuto."
+
+      # Alerta se o uso de memória estiver muito alto (exemplo para Node Exporter)
+      - alert: HighMemoryUsage
+        expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100 > 80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Uso de memória alto em {{ $labels.instance }}"
+          description: "O uso de memória está acima de 80% por 5 minutos."
+
+# expr (Expressão): É a consulta (usando uma linguagem chamada PromQL) que o Prometheus avalia. Se o resultado for verdadeiro, o alerta entra em estado de "pendente".
+# for: O tempo que a condição deve ser verdadeira antes de o alerta ser disparado (evita alarmes falsos por picos momentâneos).
+# annotations: Metadados que descrevem o alerta, úteis para quem vai ler a notificação.

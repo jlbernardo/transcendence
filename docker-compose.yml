@@ -1,0 +1,48 @@
+services:
+  # O Banco de Dados de Métricas
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    ports:
+      - "9090:9090"
+    networks:
+      - transcendence-net
+
+  # A Interface Visual
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    user: "${UID}:${GID}"
+    ports:
+      - "3000:3000"
+    environment:
+    - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD}
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
+      # Se você tiver um dashboard salvo em JSON, monta ele aqui:
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards
+    networks:
+      - transcendence-net
+
+  # Coletor de métricas do Sistema Operacional (Hardware/Container)
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter
+    ports:
+      - "9100:9100"
+    networks:
+      - transcendence-net
+
+networks:
+  transcendence-net:
+    driver: bridge
+
+volumes:
+  prometheus_data:
+  grafana_data:
