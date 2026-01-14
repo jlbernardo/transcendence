@@ -18,6 +18,8 @@ from django.contrib import admin
 from django.urls import path
 from accounts.views import auth
 from accounts.views import profile
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,4 +32,9 @@ urlpatterns = [
     # profile
     path('api/profile/', profile.profile, name='profile'),
     path('api/profile/update/', profile.update_profile, name='update_profile'),
+    path('api/profile/avatar/', profile.avatar, name='avatar'),
 ]
+
+# Configuration to serve media
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -137,3 +138,7 @@ REST_FRAMEWORK = {
 
 # Auth
 AUTH_USER_MODEL = 'accounts.CustomUser'
+
+# settings to handle media files
+MEDIA_ROOT =  os.path.join(BASE_DIR, 'avatar') # path to store images
+MEDIA_URL = '/avatar/' # url to see images
