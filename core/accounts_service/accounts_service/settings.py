@@ -140,5 +140,5 @@ REST_FRAMEWORK = {
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
 # settings to handle media files
-MEDIA_ROOT =  os.path.join(BASE_DIR, 'avatar') # path to store images
-MEDIA_URL = '/avatar/' # url to see images
+MEDIA_ROOT =  os.path.join(BASE_DIR, 'images') # path to store images
+MEDIA_URL = '/images/' # url to see images

@@ -7,7 +7,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Profile
-        fields = ['id', 'user', 'bio']
+        fields = ['id', 'user', 'bio', 'avatar']
         read_only_fields = ['id', 'user']
 
     def validate_bio(self, value):

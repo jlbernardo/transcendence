@@ -37,7 +37,7 @@ def update_profile(request):
         return Response(serializer.data, status=status.HTTP_200_OK)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['PUT'])
+@api_view(['PUT', 'DELETE'])
 def avatar(request):
     """
     Avatar upload for authenticated user.
@@ -60,3 +60,4 @@ def avatar(request):
         profile.save()
         serializer = ProfileSerializer(profile)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    #elif request.method == 'DELETE':
