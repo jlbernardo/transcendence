@@ -1,19 +1,22 @@
 from django.db import IntegrityError
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from accounts.models.user import CustomUser
 from accounts.models.profile import Profile
-from accounts.serializers.profile import ProfileSerializer
 from django.urls import reverse
 from rest_framework.test import APIClient
-from django.core.files.uploadedfile import SimpleUploadedFile
+import tempfile
+from accounts.tests.utils.utils import create_fake_image
 
-class ProfileTestCase(TestCase):
+TEMP_MEDIA_ROOT = tempfile.mkdtemp()
+
+@override_settings(MEDIA_ROOT=TEMP_MEDIA_ROOT)
+class AvatarTestCase(TestCase):
     def setUp(self):
         self.client = APIClient()
         self.login_url = reverse('login')
-        self.profile_url = reverse('profile')
-        self.update_profile_url = reverse('update_profile')
         self.avatar_url = reverse('avatar')
+
+        self.fake_avatar = create_fake_image(size_mb=1)
 
         self.user = CustomUser.objects.create_user(
         email="user@example.com", 
@@ -29,26 +32,112 @@ class ProfileTestCase(TestCase):
         login_response = self.client.post(self.login_url, data, format='json')
         self.token = login_response.data["token"]
 
+    def test_avatar_is_empty(self):
+        """
+        Test that a profile avatar is empty when created
+        """
+        profile = Profile.objects.get(user=self.user)
+
+        self.assertFalse(profile.avatar)
+        self.assertEqual(profile.avatar.name, '')
+
     def test_avatar_upload(self):
         """
         Test that authenticated user can upload avatar
         """
-        fake_avatar = SimpleUploadedFile(
-            name="avatar.png",
-            content=b"fake image content",
-            content_type="image/png"
-        )
 
-        avatar_response = self.client.put(self.avatar_url, {'avatar': fake_avatar}, HTTP_AUTHORIZATION=f'Token {self.token}', format='multipart')
-        print(f'avatar_response: {avatar_response.data}')
+        avatar_response = self.client.put(
+            self.avatar_url, 
+            {'avatar': self.fake_avatar}, 
+            HTTP_AUTHORIZATION=f'Token {self.token}', 
+            format='multipart')
         
         self.assertEqual(avatar_response.status_code, 200)
-        self.assertIn('avatar', avatar_response.data) # exists
-        self.assertNotEqual(avatar_response.data['avatar'], '') # not empty
-        self.assertIsInstance(avatar_response.data['avatar'], str) # string
-        self.assertIn('avatars/', avatar_response.data['avatar']) # in avatars/
+        self.assertIn('avatar', avatar_response.data)
+        self.assertIn('avatars/', avatar_response.data['avatar'])
+
+    def test_file_name(self):
+        avatar_response = self.client.put(
+            self.avatar_url, 
+            {'avatar': self.fake_avatar}, 
+            HTTP_AUTHORIZATION=f'Token {self.token}', 
+            format='multipart')
+        
+        self.assertEqual(avatar_response.status_code, 200)
+
+        filename = avatar_response.data['avatar'].split('_')[-1]
+        name_without_ext = filename.split('.')[0]
+        self.assertEqual(avatar_response.data['id'], int(name_without_ext))
 
     def test_avatar_replacement(self):
         """
-        Test that a new upload replace previous avatar stored
+        Test that a new upload replaces the previous avatar stored
         """
+
+        avatar_response = self.client.put(
+            self.avatar_url, 
+            {'avatar': self.fake_avatar}, 
+            HTTP_AUTHORIZATION=f'Token {self.token}', 
+            format='multipart')
+
+        self.assertEqual(avatar_response.status_code, 200)
+        avatar_response2 = self.client.put(
+            self.avatar_url, 
+            {'avatar': create_fake_image()}, 
+            HTTP_AUTHORIZATION=f'Token {self.token}', 
+            format='multipart')
+
+        self.assertEqual(avatar_response2.status_code, 200)
+    
+        self.assertEqual(avatar_response.data['avatar'], avatar_response2.data['avatar'])
+
+    def test_avatar_upload_without_token(self):
+        """
+        Test that with an invalid token a user cannot upload an avatar
+        """
+
+        token = "invalidtoken"
+
+        avatar_response = self.client.put(
+            self.avatar_url, 
+            {'avatar': self.fake_avatar}, 
+            HTTP_AUTHORIZATION=f'Token {token}', 
+            format='multipart')
+        
+        self.assertEqual(avatar_response.status_code, 401)
+
+    def test_upload_without_avatar(self):
+        """
+        Test that upload fails without avatar
+        """
+        avatar_response = self.client.put(
+            self.avatar_url, 
+            HTTP_AUTHORIZATION=f'Token {self.token}', 
+            format='multipart')
+        self.assertEqual(avatar_response.status_code, 400)
+
+    def test_file_size_valid(self):
+        """
+        Test that an upload of up to or equal to 2MB will be accepted
+        """
+
+        avatar_response = self.client.put(
+            self.avatar_url, 
+            {'avatar': create_fake_image(size_mb=2.0)}, 
+            HTTP_AUTHORIZATION=f'Token {self.token}', 
+            format='multipart')
+
+        self.assertEqual(avatar_response.status_code, 200)
+
+    def test_file_size_invalid(self):
+        """
+        Test that an upload of more than 2MB will not be accepted
+        """
+
+        avatar_response = self.client.put(
+            self.avatar_url, 
+            {'avatar': create_fake_image(size_mb=2.1)}, 
+            HTTP_AUTHORIZATION=f'Token {self.token}', 
+            format='multipart')
+        
+        self.assertEqual(avatar_response.status_code, 400)

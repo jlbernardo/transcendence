@@ -7,7 +7,7 @@ def avatar_upload_path(instance, filename):
     Create upload path for avatar: avatars/{user id}.{extension}
     """
     ext = os.path.splitext(filename)[1]
-    return f'avatars/{instance.user.id}{ext}'
+    return f'avatars/user_{instance.user.id}{ext}'
 
 class Profile(models.Model):
     """

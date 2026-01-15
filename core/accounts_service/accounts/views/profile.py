@@ -56,8 +56,14 @@ def avatar(request):
                 {'error': 'No avatar file provided.'},
                 status=status.HTTP_400_BAD_REQUEST
             )
-        profile.avatar = request.FILES['avatar']
-        profile.save()
-        serializer = ProfileSerializer(profile)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        
+        if profile.avatar:
+            profile.avatar.delete(save=False)
+        
+        serializer = ProfileSerializer(profile, data={'avatar': request.FILES['avatar']}, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     #elif request.method == 'DELETE':
