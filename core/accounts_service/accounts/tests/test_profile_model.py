@@ -89,3 +89,44 @@ class ProfileTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data['bio'], "this is a new bio.")
+
+    def test_bio_more_than_max_length(self):
+        """
+        Test that bio field cannot have more than 300 characters
+        """
+        data = {
+            "email": "user@example.com",
+            "password": "SecurePass123!"
+        }
+
+        # 301 characters
+        new_bio = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed justo lorem. Curabitur nec maximus nulla, nec pharetra lectus. Morbi at vestibulum lorem. In vitae venenatis purus, sit amet cursus dui. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas non."
+
+        login_response = self.client.post(self.login_url, data, format='json')
+        token = login_response.data["token"]
+
+        response = self.client.put(self.profile_url, {"bio": new_bio}, HTTP_AUTHORIZATION=f'Token {token}', format='json')
+
+        self.assertEqual(response.status_code, 400)
+        self.assertNotEqual(response.data['bio'], new_bio)
+
+    def test_bio_max_length(self):
+        """
+        Test that bio field can only have up to 300 characters
+        """
+        data = {
+            "email": "user@example.com",
+            "password": "SecurePass123!"
+        }
+
+        # 300 characters
+        new_bio = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis molestie tortor nec porta ornare. Sed vel lectus finibus nibh interdum finibus ut vitae leo. Phasellus tempus, magna ut posuere hendrerit, diam nulla scelerisque urna, sit amet gravida arcu lacus sit amet elit. Sed et bibendum ipsum nisi."
+        
+        login_response = self.client.post(self.login_url, data, format='json')
+        token = login_response.data["token"]
+
+        response = self.client.put(self.profile_url, {"bio": new_bio}, HTTP_AUTHORIZATION=f'Token {token}', format='json')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['bio'], new_bio)
+        self.assertEqual(len(response.data['bio']), len(new_bio))

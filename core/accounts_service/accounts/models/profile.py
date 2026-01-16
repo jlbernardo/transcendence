@@ -21,7 +21,7 @@ class Profile(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE
     )
-    bio = models.TextField(blank=True)
+    bio = models.TextField(blank=True, max_length=300)
     avatar = ProcessedImageField(
         upload_to=avatar_upload_path,
         processors=[ResizeToFill(256, 256)],
