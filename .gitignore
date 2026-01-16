@@ -14,4 +14,4 @@ __pycache__/
 db.sqlite3
 
 # Core/accounts_service
-images/
+images/avatars/user*

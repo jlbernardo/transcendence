@@ -38,22 +38,24 @@ class AvatarTestCase(TestCase):
         """
         profile = Profile.objects.get(user=self.user)
         if profile.avatar:
-            profile.avatar.delete(save=True)
+            profile.avatar.delete(save=False)
+            profile.avatar = 'avatars/default.png'
+            profile.save(update_fields=['avatar'])
 
-    def test_avatar_is_empty(self):
+    def test_avatar_default(self):
         """
-        Test that a profile avatar is empty when created
+        Test that a profile avatar is set to default when created
         """
         profile = Profile.objects.get(user=self.user)
 
-        self.assertFalse(profile.avatar)
-        self.assertEqual(profile.avatar.name, '')
+        self.assertTrue(profile.avatar)
+        self.assertNotEqual(profile.avatar.name, '')
+        self.assertEqual(profile.avatar.name, 'avatars/default.png')
 
     def test_avatar_upload(self):
         """
         Test that authenticated user can upload avatar
         """
-
         avatar_response = self.client.put(
             self.avatar_url, 
             {'avatar': self.fake_avatar}, 
@@ -73,7 +75,7 @@ class AvatarTestCase(TestCase):
         
         self.assertEqual(avatar_response.status_code, 200)
 
-        filename = avatar_response.data['avatar'].split('_')[-1]
+        filename = avatar_response.data['avatar'].split('_')[-2]
         name_without_ext = filename.split('.')[0]
         self.assertEqual(avatar_response.data['id'], int(name_without_ext))
 
@@ -81,7 +83,6 @@ class AvatarTestCase(TestCase):
         """
         Test that a new upload replaces the previous avatar stored
         """
-
         avatar_response = self.client.put(
             self.avatar_url, 
             {'avatar': self.fake_avatar}, 
@@ -103,7 +104,6 @@ class AvatarTestCase(TestCase):
         """
         Test that with an invalid token a user cannot upload an avatar
         """
-
         token = "invalidtoken"
 
         avatar_response = self.client.put(
@@ -128,7 +128,6 @@ class AvatarTestCase(TestCase):
         """
         Test that an upload of up to or equal to 2MB will be accepted
         """
-
         avatar_response = self.client.put(
             self.avatar_url, 
             {'avatar': create_fake_image(size_mb=2.0)}, 
@@ -141,7 +140,6 @@ class AvatarTestCase(TestCase):
         """
         Test that an upload of more than 2MB will not be accepted
         """
-
         avatar_response = self.client.put(
             self.avatar_url, 
             {'avatar': create_fake_image(size_mb=2.1)}, 
@@ -154,7 +152,6 @@ class AvatarTestCase(TestCase):
         """
         Test that avatar image is modified to standard width and height
         """
- 
         avatar_response = self.client.put(
             self.avatar_url, 
             {'avatar': self.fake_avatar}, 
@@ -190,5 +187,4 @@ class AvatarTestCase(TestCase):
 
         profile = Profile.objects.get(user=self.user)
 
-        self.assertFalse(profile.avatar)
-        self.assertEqual(profile.avatar.name, '')
+        self.assertEqual(profile.avatar.name, 'avatars/default.png')

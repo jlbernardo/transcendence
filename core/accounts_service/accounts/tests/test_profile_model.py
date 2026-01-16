@@ -58,7 +58,7 @@ class ProfileTestCase(TestCase):
         self.assertIn('user', profile_response.data)
         self.assertEqual(profile_response.data['user']['email'], "user@example.com")
         self.assertEqual(profile_response.data['bio'], "")
-        self.assertEqual(profile_response.data['avatar'], None)
+        self.assertEqual(profile_response.data['avatar'], '/images/avatars/default.png')
 
     def test_get_profile_without_token(self):
         """

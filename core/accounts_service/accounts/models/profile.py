@@ -26,8 +26,7 @@ class Profile(models.Model):
         upload_to=avatar_upload_path,
         processors=[ResizeToFill(256, 256)],
         format='PNG',
-        blank=True,
-        null=True
+        default='avatars/default.png'
     )
 
     def __str__(self):

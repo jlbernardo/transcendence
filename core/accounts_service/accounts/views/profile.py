@@ -51,7 +51,11 @@ def avatar(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     elif request.method == 'DELETE':
-        if profile.avatar:
-            profile.avatar.delete(save=True)
+        if profile.avatar and profile.avatar.name != 'avatars/default.png':
+            profile.avatar.delete(save=False)
+        
+        profile.avatar = 'avatars/default.png'
+        profile.save()
+
         serializer = ProfileSerializer(profile)
         return Response(serializer.data, status=status.HTTP_200_OK)
