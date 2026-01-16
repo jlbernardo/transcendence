@@ -2,6 +2,8 @@ from django.db import models
 from django.conf import settings
 import os
 import hashlib
+from imagekit.models import ProcessedImageField
+from imagekit.processors import ResizeToFill
 
 def avatar_upload_path(instance, filename):
     """
@@ -22,7 +24,13 @@ class Profile(models.Model):
         on_delete=models.CASCADE
     )
     bio = models.TextField(blank=True)
-    avatar = models.ImageField(upload_to=avatar_upload_path, blank=True, null=True)
+    avatar = ProcessedImageField(
+        upload_to=avatar_upload_path,
+        processors=[ResizeToFill(256, 256)],
+        format='PNG',
+        blank=True,
+        null=True
+    )
 
     def __str__(self):
         return f"Profile({self.user.email})"

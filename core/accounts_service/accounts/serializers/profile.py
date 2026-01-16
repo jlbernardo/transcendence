@@ -1,8 +1,6 @@
 from rest_framework import serializers
 from accounts.models.profile import Profile
 from accounts.serializers.auth import UserSerializer
-from PIL import Image
-from io import BytesIO
 
 class ProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
@@ -23,15 +21,5 @@ class ProfileSerializer(serializers.ModelSerializer):
         max_size = 2 * 1024 * 1024
         if avatar.size > max_size:
             raise serializers.ValidationError("Avatar too large")
-        
-        image = Image.open(avatar)
-        image = image.resize((256, 256))
-
-        buffer = BytesIO()
-        image.save(buffer, format="PNG")
-        buffer.seek(0)
-
-        avatar.file = buffer
-        avatar.size = buffer.getbuffer().nbytes
 
         return avatar
