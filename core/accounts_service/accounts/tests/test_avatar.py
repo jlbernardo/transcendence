@@ -6,6 +6,7 @@ from django.urls import reverse
 from rest_framework.test import APIClient
 import tempfile
 from accounts.tests.utils.utils import create_fake_image
+from PIL import Image
 
 TEMP_MEDIA_ROOT = tempfile.mkdtemp()
 
@@ -16,7 +17,7 @@ class AvatarTestCase(TestCase):
         self.login_url = reverse('login')
         self.avatar_url = reverse('avatar')
 
-        self.fake_avatar = create_fake_image(size_mb=1)
+        self.fake_avatar = create_fake_image()
 
         self.user = CustomUser.objects.create_user(
         email="user@example.com", 
@@ -141,3 +142,49 @@ class AvatarTestCase(TestCase):
             format='multipart')
         
         self.assertEqual(avatar_response.status_code, 400)
+
+    def test_avatar_dimensions(self):
+        """
+        Test that avatar image is modified to standard width and height
+        """
+ 
+        avatar_response = self.client.put(
+            self.avatar_url, 
+            {'avatar': self.fake_avatar}, 
+            HTTP_AUTHORIZATION=f'Token {self.token}', 
+            format='multipart')
+
+        print(f'avatar_response: {avatar_response.data}')
+        self.assertEqual(avatar_response.status_code, 200)
+
+        profile = Profile.objects.get(user=self.user)
+        
+        with Image.open(profile.avatar.path) as img:
+            self.assertEqual(img.width, 256)
+            self.assertEqual(img.height, 256)
+
+    def test_delete_avatar(self):
+        """
+        Test that avatar is deleted when requested
+        """
+        avatar_response = self.client.put(
+            self.avatar_url, 
+            {'avatar': self.fake_avatar}, 
+            HTTP_AUTHORIZATION=f'Token {self.token}', 
+            format='multipart')
+        
+        print(f'avatar_response: {avatar_response.data}')
+        self.assertEqual(avatar_response.status_code, 200)
+
+        delete_response = self.client.delete(
+            self.avatar_url,
+            HTTP_AUTHORIZATION=f'Token {self.token}', 
+            format='multipart')
+        
+        print(f'delete_response: {delete_response}')
+        self.assertEqual(delete_response.status_code, 200)
+
+        profile = Profile.objects.get(user=self.user)
+
+        self.assertFalse(profile.avatar)
+        self.assertEqual(profile.avatar.name, '')

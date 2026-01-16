@@ -40,7 +40,7 @@ def update_profile(request):
 @api_view(['PUT', 'DELETE'])
 def avatar(request):
     """
-    Avatar upload for authenticated user.
+    Avatar upload and deletion for authenticated user.
     Requires authentication token in header.
     """
     if not request.user.is_authenticated:
@@ -66,4 +66,9 @@ def avatar(request):
             return Response(serializer.data, status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    #elif request.method == 'DELETE':
+    
+    elif request.method == 'DELETE':
+        if profile.avatar:
+            profile.avatar.delete(save=True)
+            return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_204_NO_CONTENT)

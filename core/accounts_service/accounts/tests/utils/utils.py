@@ -2,7 +2,7 @@ from PIL import Image
 from io import BytesIO
 from django.core.files.uploadedfile import SimpleUploadedFile
 
-def create_fake_image(size_mb, name="avatar.png", image_size=(100, 100), format="PNG"):
+def create_fake_image(size_mb=1, name="avatar.png", image_size=(100, 100), format="PNG"):
     """
     Creates an image in memory and returns a SimpleUploadedFile ready for upload
     """
