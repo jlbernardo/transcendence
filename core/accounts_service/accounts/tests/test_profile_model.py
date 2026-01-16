@@ -2,7 +2,6 @@ from django.db import IntegrityError
 from django.test import TestCase
 from accounts.models.user import CustomUser
 from accounts.models.profile import Profile
-from accounts.serializers.profile import ProfileSerializer
 from django.urls import reverse
 from rest_framework.test import APIClient
 
@@ -11,7 +10,6 @@ class ProfileTestCase(TestCase):
         self.client = APIClient()
         self.login_url = reverse('login')
         self.profile_url = reverse('profile')
-        self.update_profile_url = reverse('update_profile')
 
         self.user = CustomUser.objects.create_user(
         email="user@example.com", 
@@ -87,7 +85,7 @@ class ProfileTestCase(TestCase):
         login_response = self.client.post(self.login_url, data, format='json')
         token = login_response.data["token"]
 
-        response = self.client.put(self.update_profile_url, new_bio, HTTP_AUTHORIZATION=f'Token {token}', format='json')
+        response = self.client.put(self.profile_url, new_bio, HTTP_AUTHORIZATION=f'Token {token}', format='json')
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data['bio'], "this is a new bio.")

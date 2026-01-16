@@ -31,7 +31,6 @@ urlpatterns = [
 
     # profile
     path('api/profile/', profile.profile, name='profile'),
-    path('api/profile/update/', profile.update_profile, name='update_profile'),
     path('api/profile/avatar/', profile.avatar, name='avatar'),
 ]
 

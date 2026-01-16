@@ -4,36 +4,34 @@ from rest_framework.response import Response
 from ..serializers.profile import ProfileSerializer
 from ..models.profile import Profile
 
-@api_view(['GET'])
+def get_user_profile(user):
+    return Profile.objects.get(user=user)
+
+@api_view(['GET', 'PUT'])
 def profile(request):
     """
-    Returns authenticated user profile.
+    Returns/Updates authenticated user profile.
     Requires authentication token in header.
     """
-    profile = Profile.objects.get(user=request.user)
-    serializer = ProfileSerializer(profile)
-    return Response(serializer.data, status=status.HTTP_200_OK)
-
-@api_view(['PUT'])
-def update_profile(request):
-    """
-    Updates authenticated user profile.
-    Requires authentication token in header.
-    """
-    profile = Profile.objects.get(user=request.user)
-    serializer = ProfileSerializer(profile, data=request.data, partial=True)
-    if serializer.is_valid():
-        serializer.save()
+    profile = get_user_profile(request.user)
+    if request.method == 'GET':
+        serializer = ProfileSerializer(profile)
         return Response(serializer.data, status=status.HTTP_200_OK)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    elif request.method == 'PUT':
+        serializer = ProfileSerializer(profile, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['PUT', 'DELETE'])
 def avatar(request):
     """
-    Avatar upload and deletion for authenticated user.
+    Uploads/Deletes avatar for authenticated user.
     Requires authentication token in header.
     """
-    profile = Profile.objects.get(user=request.user)
+    profile = get_user_profile(request.user)
 
     if request.method == 'PUT':
         if 'avatar' not in request.FILES:
@@ -55,5 +53,5 @@ def avatar(request):
     elif request.method == 'DELETE':
         if profile.avatar:
             profile.avatar.delete(save=True)
-            return Response(status=status.HTTP_200_OK)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        serializer = ProfileSerializer(profile)
+        return Response(serializer.data, status=status.HTTP_200_OK)

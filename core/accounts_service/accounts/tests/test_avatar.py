@@ -1,4 +1,3 @@
-from django.db import IntegrityError
 from django.test import TestCase, override_settings
 from accounts.models.user import CustomUser
 from accounts.models.profile import Profile
@@ -32,6 +31,14 @@ class AvatarTestCase(TestCase):
 
         login_response = self.client.post(self.login_url, data, format='json')
         self.token = login_response.data["token"]
+
+    def tearDown(self):
+        """
+        Clean up avatar files after each test
+        """
+        profile = Profile.objects.get(user=self.user)
+        if profile.avatar:
+            profile.avatar.delete(save=True)
 
     def test_avatar_is_empty(self):
         """
@@ -154,7 +161,6 @@ class AvatarTestCase(TestCase):
             HTTP_AUTHORIZATION=f'Token {self.token}', 
             format='multipart')
 
-        print(f'avatar_response: {avatar_response.data}')
         self.assertEqual(avatar_response.status_code, 200)
 
         profile = Profile.objects.get(user=self.user)
@@ -173,7 +179,6 @@ class AvatarTestCase(TestCase):
             HTTP_AUTHORIZATION=f'Token {self.token}', 
             format='multipart')
         
-        print(f'avatar_response: {avatar_response.data}')
         self.assertEqual(avatar_response.status_code, 200)
 
         delete_response = self.client.delete(
@@ -181,7 +186,6 @@ class AvatarTestCase(TestCase):
             HTTP_AUTHORIZATION=f'Token {self.token}', 
             format='multipart')
         
-        print(f'delete_response: {delete_response}')
         self.assertEqual(delete_response.status_code, 200)
 
         profile = Profile.objects.get(user=self.user)

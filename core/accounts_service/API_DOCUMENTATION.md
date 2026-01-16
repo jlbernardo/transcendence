@@ -40,7 +40,7 @@
   - `bio` (string)
 - **Authentication:** Token required
 
-## PUT /api/profile/update/
+## PUT /api/profile/
 - **Description:** Updates authenticated user profile
 - **Parameters:** JSON with:
   - `bio` (string, optional)
@@ -54,6 +54,16 @@
 - **Description:** Updates image file for authenticated user profile
 - **Parameters:** multipart/form-data with:
   - `avatar` (image file, required)
+- **Return:** JSON with:
+  - `id` (integer)
+  - `user` (object with id, email, username, created_at, is_active)
+  - `bio` (string)
+  - `avatar` (string, URL)
+- **Authentication:** Token required
+
+## DELETE /api/profile/avatar/
+- **Description:** Deletes image file for authenticated user profile
+- **Parameters:** None
 - **Return:** JSON with:
   - `id` (integer)
   - `user` (object with id, email, username, created_at, is_active)
