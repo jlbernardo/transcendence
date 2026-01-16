@@ -1,13 +1,17 @@
 from django.db import models
 from django.conf import settings
 import os
+import hashlib
 
 def avatar_upload_path(instance, filename):
     """
-    Create upload path for avatar: avatars/{user id}.{extension}
+    Create upload path for avatar: avatars/{user id}_{hash_string}.{extension}
     """
     ext = os.path.splitext(filename)[1]
-    return f'avatars/user_{instance.user.id}{ext}'
+    content = instance.avatar.file.read() 
+    instance.avatar.file.seek(0)
+    hash_string = hashlib.md5(content).hexdigest()
+    return f'avatars/user_{instance.user.id}_{hash_string}{ext}'
 
 class Profile(models.Model):
     """
