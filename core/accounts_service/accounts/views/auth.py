@@ -1,13 +1,15 @@
 from rest_framework import status
-from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import get_user_model
 from ..serializers.auth import UserRegistrationSerializer, UserLoginSerializer, UserSerializer
+from rest_framework.permissions import AllowAny
+from rest_framework.decorators import api_view, permission_classes
 
 User = get_user_model()
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def register(request):
     """
     Registers a new user with email and password.
@@ -24,8 +26,8 @@ def register(request):
         }, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def login(request):
     """
     Authenticates user with email and password.
@@ -47,12 +49,6 @@ def logout(request):
     """
     User logout and token removal.
     """
-    if not request.user.is_authenticated:
-        return Response(
-            {'error': 'Not authenticated.'},
-            status=status.HTTP_401_UNAUTHORIZED
-        )
-    
     try:
         request.user.auth_token.delete()
         return Response(

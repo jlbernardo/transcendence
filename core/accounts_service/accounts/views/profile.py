@@ -10,11 +10,6 @@ def profile(request):
     Returns authenticated user profile.
     Requires authentication token in header.
     """
-    if not request.user.is_authenticated:
-        return Response(
-            {'error': 'Not authenticated.'},
-            status=status.HTTP_401_UNAUTHORIZED
-        )
     profile = Profile.objects.get(user=request.user)
     serializer = ProfileSerializer(profile)
     return Response(serializer.data, status=status.HTTP_200_OK)
@@ -25,11 +20,6 @@ def update_profile(request):
     Updates authenticated user profile.
     Requires authentication token in header.
     """
-    if not request.user.is_authenticated:
-        return Response(
-            {'error': 'Not authenticated.'},
-            status=status.HTTP_401_UNAUTHORIZED
-        )
     profile = Profile.objects.get(user=request.user)
     serializer = ProfileSerializer(profile, data=request.data, partial=True)
     if serializer.is_valid():
@@ -43,11 +33,6 @@ def avatar(request):
     Avatar upload and deletion for authenticated user.
     Requires authentication token in header.
     """
-    if not request.user.is_authenticated:
-        return Response(
-            {'error': 'Not authenticated.'},
-            status=status.HTTP_401_UNAUTHORIZED
-        )
     profile = Profile.objects.get(user=request.user)
 
     if request.method == 'PUT':
