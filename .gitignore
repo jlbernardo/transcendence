@@ -12,3 +12,6 @@ __pycache__/
 
 # Django
 db.sqlite3
+
+# Core/accounts_service
+images/
