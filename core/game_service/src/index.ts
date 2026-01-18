@@ -4,6 +4,7 @@ import { createServer } from 'http';
 import { WebSocketServer, WebSocket } from 'ws';
 import { GameRoom } from './game/GameRoom.js';
 import { ClientMessage, ServerMessage } from './types/game.js';
+import { register, activeRooms, activeConnections, totalConnections } from './metrics.js';
 
 const app = express();
 const server = createServer(app);
@@ -31,6 +32,8 @@ function send(ws: WebSocket, message: ServerMessage): void {
 // WebSocket connection handler
 wss.on('connection', (ws: WebSocket, req) => {
   console.log('New client connected');
+  activeConnections.inc();
+  totalConnections.inc();
 
   ws.on('message', (data: Buffer) => {
     try {
@@ -45,6 +48,7 @@ wss.on('connection', (ws: WebSocket, req) => {
 
   ws.on('close', () => {
     console.log('Client disconnected');
+    activeConnections.dec();
     handleDisconnect(ws);
   });
 
@@ -95,6 +99,7 @@ function handleCreateRoom(ws: WebSocket): void {
 
   rooms.set(roomId, room);
   playerRooms.set(ws, roomId);
+  activeRooms.inc();
 
   console.log(`Room ${roomId} created by player ${playerNumber}`);
 
@@ -151,6 +156,7 @@ function handleLeaveRoom(ws: WebSocket): void {
 
     if (room.isEmpty()) {
       rooms.delete(roomId);
+      activeRooms.dec();
       console.log(`Room ${roomId} deleted (last player left)`);
     }
     // Don't delete room or notify remaining player - they can stay on post-match screen
@@ -199,6 +205,7 @@ function handleDisconnect(ws: WebSocket): void {
 
       if (room.isEmpty()) {
         rooms.delete(roomId);
+        activeRooms.dec();
         console.log(`Room ${roomId} deleted (empty)`);
       }
 	  else {
@@ -210,6 +217,7 @@ function handleDisconnect(ws: WebSocket): void {
         }
 
         rooms.delete(roomId);
+        activeRooms.dec();
         console.log(`Room ${roomId} deleted (opponent disconnected)`);
       }
     }
@@ -221,6 +229,12 @@ function handleDisconnect(ws: WebSocket): void {
 // Health check endpoint
 app.get('/health', (_req, res) => {
   res.json({ status: 'ok', rooms: rooms.size });
+});
+
+// Prometheus metrics endpoint
+app.get('/metrics', async (_req, res) => {
+  res.set('Content-Type', register.contentType);
+  res.end(await register.metrics());
 });
 
 // Server setup and initialization
