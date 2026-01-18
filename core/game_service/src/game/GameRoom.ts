@@ -35,9 +35,6 @@ export class GameRoom {
     if (player) {
       this.players.delete(ws);
       this.stopGame();
-
-      // Notifies remaining player
-      this.broadcast({ type: 'PLAYER_DISCONNECTED' });
     }
   }
 

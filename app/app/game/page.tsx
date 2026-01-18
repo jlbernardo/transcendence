@@ -110,6 +110,10 @@ function GameApp({ wsUrl }: { wsUrl: string }) {
           resetGame();
           break;
 
+        case "ROOM_LEFT":
+          // Confirmation that we left the room, state already reset by resetGame()
+          break;
+
         case "ERROR":
           setError(message.message);
           break;
@@ -144,8 +148,9 @@ function GameApp({ wsUrl }: { wsUrl: string }) {
 
   const handlePlayAgain = useCallback(
     () => {
+      send({ type: "LEAVE_ROOM" });
       resetGame();
-    }, [resetGame]);
+    }, [send, resetGame]);
 
   // Renders based on app state
   switch (appState) {

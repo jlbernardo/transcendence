@@ -44,7 +44,8 @@ export type ClientMessage =
   | { type: 'CREATE_ROOM' }
   | { type: 'JOIN_ROOM'; roomId: string }
   | { type: 'PADDLE_MOVE'; direction: 'up' | 'down' | 'stop' }
-  | { type: 'PLAYER_READY' };
+  | { type: 'PLAYER_READY' }
+  | { type: 'LEAVE_ROOM' };
 
 export type ServerMessage =
   | { type: 'ROOM_CREATED'; roomId: string }
@@ -56,4 +57,5 @@ export type ServerMessage =
   | { type: 'GAME_STATE'; state: GameState }
   | { type: 'GAME_OVER'; winner: 1 | 2 }
   | { type: 'PLAYER_DISCONNECTED' }
+  | { type: 'ROOM_LEFT' }
   | { type: 'ERROR'; message: string };
