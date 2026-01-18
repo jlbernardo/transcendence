@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import Footer from "@/components/Footer";
 
 const pixel = localFont({
   src: "../public/PixelFont.ttf",
@@ -22,6 +23,7 @@ export default function RootLayout({
         className={`${pixel.className} antialiased text-lg`}
       >
         {children}
+        <Footer />
       </body>
     </html>
   );
