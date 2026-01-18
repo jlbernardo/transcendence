@@ -62,6 +62,9 @@ function handleMessage(ws: WebSocket, message: ClientMessage): void {
     case 'JOIN_ROOM':
       handleJoinRoom(ws, message.roomId);
       break;
+    case 'LEAVE_ROOM':
+      handleLeaveRoom(ws);
+      break;
     case 'PADDLE_MOVE':
     case 'PLAYER_READY':
       handleGameMessage(ws, message);
@@ -133,6 +136,31 @@ function handleJoinRoom(ws: WebSocket, roomId: string): void {
   room.notifyPlayerJoined();
 }
 
+function handleLeaveRoom(ws: WebSocket): void {
+  const roomId = playerRooms.get(ws);
+
+  if (!roomId) {
+    send(ws, { type: 'ROOM_LEFT' });
+    return;
+  }
+
+  const room = rooms.get(roomId);
+
+  if (room) {
+    room.removePlayer(ws);
+
+    if (room.isEmpty()) {
+      rooms.delete(roomId);
+      console.log(`Room ${roomId} deleted (last player left)`);
+    }
+    // Don't delete room or notify remaining player - they can stay on post-match screen
+  }
+
+  playerRooms.delete(ws);
+  send(ws, { type: 'ROOM_LEFT' });
+  console.log(`Player left room ${roomId}`);
+}
+
 function handleGameMessage(ws: WebSocket, message: ClientMessage): void {
   const roomId = playerRooms.get(ws);
 
@@ -159,6 +187,14 @@ function handleDisconnect(ws: WebSocket): void {
 
     if (room) {
       const allPlayerWs = room.getPlayerWebSockets();
+      
+      // Notify remaining players before removing
+      for (const playerWs of allPlayerWs) {
+        if (playerWs !== ws) {
+          send(playerWs, { type: 'PLAYER_DISCONNECTED' });
+        }
+      }
+      
       room.removePlayer(ws);
 
       if (room.isEmpty()) {

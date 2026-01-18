@@ -1,7 +1,12 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  /* config options here */
+const nextConfig = {
+  async rewrites() {
+    return [
+      {
+        source: '/ws',
+        destination: 'http://localhost:3002/ws',
+      },
+    ];
+  },
 };
 
-export default nextConfig;
+module.exports = nextConfig;
