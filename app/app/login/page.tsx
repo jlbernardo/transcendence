@@ -1,6 +1,39 @@
+"use client";
+
 import Link from "next/link";
+import { LoginData } from "@/types/user";
+import { login } from "@/services/auth_login";
+import { useRouter } from "next/navigation";
+import api from "@/lib/axios_instance";
 
 export default function Login() {
+  const router = useRouter()
+
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const formData = new FormData(event.currentTarget);
+    const data: LoginData = {
+      email: formData.get('email') as string,
+      // username: formData.get('username') as string,
+      password: formData.get('password') as string,
+    };
+
+    try {
+      const response = await login(data);
+      console.log("Full response:", response);
+
+      // seta token default no axios
+      api.defaults.headers.common["Authorization"] = `token ${response.token}`;
+
+      alert("Login successful");
+      router.push('/home');
+    } catch (error: any) {
+      console.error("ERROR:");
+      alert("Login failed! Check console for details.");
+    }
+   
+  }
 	return (
 		<>
 			<div className="min-h-screen flex flex-col items-center justify-center">
@@ -8,14 +41,16 @@ export default function Login() {
           <Link href="/" className="text-3xl text-amber-200 text-right">
             <p className="pr-3 pb-4 pt-1">x</p>
           </Link>
-          <form className="flex flex-col gap-4">
+          <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             <input
               type="text"
-              placeholder="Username"
+              name="email"
+              placeholder="Email"
               className="p-3 mr-3 ml-2 border-2 text-amber-200 border-amber-200/40"
             />
             <input
               type="password"
+              name="password"
               placeholder="Password"
               className="p-3 mr-3 ml-2 border-2 text-amber-200 border-amber-200/40"
             />
