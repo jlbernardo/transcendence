@@ -3,6 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
+from drf_spectacular.utils import extend_schema
 
 from ..models.friendship import FriendRequest
 from ..serializers.friendship import (
@@ -14,6 +15,10 @@ from ..serializers.auth import UserSerializer
 
 User = get_user_model()
 
+@extend_schema(
+    request=SendFriendRequestSerializer,
+    responses={201: FriendRequestSerializer}
+)
 @api_view(['POST'])
 def send_friend_request(request):
     serializer = SendFriendRequestSerializer(data=request.data)
@@ -49,6 +54,10 @@ def send_friend_request(request):
         status=status.HTTP_201_CREATED
     )
 
+@extend_schema(
+    request=AcceptFriendRequestSerializer,
+    responses={200: FriendRequestSerializer}
+)
 @api_view(['POST'])
 def accept_friend_request(request):
     serializer = AcceptFriendRequestSerializer(data=request.data)
@@ -79,6 +88,9 @@ def accept_friend_request(request):
         status=status.HTTP_200_OK
     )
 
+@extend_schema(
+    responses={200: FriendRequestSerializer(many=True)}
+)
 @api_view(['GET'])
 def list_pending_requests(request):
     """
@@ -94,6 +106,9 @@ def list_pending_requests(request):
         status=status.HTTP_200_OK
     )
 
+@extend_schema(
+    responses={200: UserSerializer(many=True)}
+)
 @api_view(['GET'])
 def list_friends(request):
     user = request.user

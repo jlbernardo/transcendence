@@ -1,12 +1,17 @@
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from drf_spectacular.utils import extend_schema
 from ..serializers.profile import ProfileSerializer
 from ..models.profile import Profile
 
 def get_user_profile(user):
     return Profile.objects.get(user=user)
 
+@extend_schema(
+    request=ProfileSerializer,
+    responses={200: ProfileSerializer}
+)
 @api_view(['GET', 'PUT'])
 def profile(request):
     """
@@ -25,6 +30,10 @@ def profile(request):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@extend_schema(
+    request={'multipart/form-data': {'type': 'object', 'properties': {'avatar': {'type': 'string', 'format': 'binary'}}}},
+    responses={200: ProfileSerializer}
+)
 @api_view(['PUT', 'DELETE'])
 def avatar(request):
     """

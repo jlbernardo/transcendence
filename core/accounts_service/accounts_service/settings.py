@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'imagekit',
     'accounts',
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -144,7 +145,25 @@ REST_FRAMEWORK = {
     'DEFAULT_THROTTLE_RATES': {
         'anon': '100/day',
         'user': '1000/day'
-    }
+    },
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Accounts Service API',
+    'DESCRIPTION': 'Public API documentation',
+    'VERSION': '1.0.0',
+    'SECURITY': [{'TokenAuth': []}],
+    'COMPONENTS': {
+        'securitySchemes': {
+            'TokenAuth': {
+                'type': 'apiKey',
+                'in': 'header',
+                'name': 'Authorization',
+                'description': 'Token-based authentication. Format: "Token <token>"',
+            },
+        },
+    },
 }
 
 # Auth
