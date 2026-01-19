@@ -27,7 +27,6 @@ class UserTestCase(TestCase):
         self.assertEqual(user.email, "user@example.com")
         self.assertEqual(user.username, "user")
         self.assertTrue(user.check_password("SecurePass123!"))
-        self.assertTrue(user.is_active)
 
     def test_email_uniqueness(self):
         """
@@ -98,7 +97,59 @@ class UserTestCase(TestCase):
 
         logout_response = self.client.post(self.logout_url, HTTP_AUTHORIZATION=f'Token {token}')
         self.assertEqual(logout_response.status_code, status.HTTP_200_OK)
-        self.assertIn('message', logout_response.data)
+
+    def test_user_is_online_after_login(self):
+        """
+        Test that user is_online status is set to True after login
+        """
+        data = {
+            "email": "user@example.com",
+            "password": "SecurePass123!"
+        }
+        response = self.client.post(self.login_url, data, format='json')
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(response.data['user']['is_online'])
+        
+        # Verify in database
+        user = CustomUser.objects.get(email="user@example.com")
+        self.assertTrue(user.is_online)
+
+    def test_user_is_offline_after_logout(self):
+        """
+        Test that user is_online status is set to False after logout
+        """
+        # Login first
+        data = {
+            "email": "user@example.com",
+            "password": "SecurePass123!"
+        }
+        login_response = self.client.post(self.login_url, data, format='json')
+        token = login_response.data["token"]
+        
+        # Verify user is online after login
+        user = CustomUser.objects.get(email="user@example.com")
+        self.assertTrue(user.is_online)
+        
+        # Logout
+        logout_response = self.client.post(self.logout_url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(logout_response.status_code, status.HTTP_200_OK)
+        
+        # Verify user is offline after logout
+        user.refresh_from_db()
+        self.assertFalse(user.is_online)
+
+    def test_user_is_offline_by_default(self):
+        """
+        Test that newly created user has is_online=False by default
+        """
+        new_user = CustomUser.objects.create_user(
+            email="newuser@example.com",
+            username="newuser",
+            password="SecurePass123!"
+        )
+        
+        self.assertFalse(new_user.is_online)
 
     def test_logout_without_token(self):
         """

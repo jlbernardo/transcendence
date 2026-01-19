@@ -460,3 +460,60 @@ class FriendshipTestCase(TestCase):
         response = self.client.get(self.list_pending_requests_url)
         
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_friends_online_status(self):
+        """
+        Test that user can see friend's online status
+        """
+        FriendRequest.objects.create(
+            from_user=self.user1,
+            to_user=self.user2,
+            accepted=True
+        )
+        
+        response1 = self.client.get(
+            self.list_friends_url, 
+            HTTP_AUTHORIZATION=f'Token {self.token_user1}'
+        )
+        
+        self.assertEqual(response1.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response1.data), 1)
+        self.assertEqual(response1.data[0]['id'], self.user2.id)
+        self.assertTrue(response1.data[0]['is_online'])
+        
+        response2 = self.client.get(
+            self.list_friends_url, 
+            HTTP_AUTHORIZATION=f'Token {self.token_user2}'
+        )
+        
+        self.assertEqual(response2.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response2.data), 1)
+        self.assertEqual(response2.data[0]['id'], self.user1.id)
+        self.assertTrue(response2.data[0]['is_online'])
+
+    def test_friends_offline_status(self):
+        """
+        Test that user can see friend's offline status
+        """
+        FriendRequest.objects.create(
+            from_user=self.user1,
+            to_user=self.user2,
+            accepted=True
+        )
+        
+        logout_url = reverse('logout')
+        logout_response = self.client.post(
+            logout_url, 
+            HTTP_AUTHORIZATION=f'Token {self.token_user2}'
+        )
+        self.assertEqual(logout_response.status_code, status.HTTP_200_OK)
+        
+        response = self.client.get(
+            self.list_friends_url, 
+            HTTP_AUTHORIZATION=f'Token {self.token_user1}'
+        )
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['id'], self.user2.id)
+        self.assertFalse(response.data[0]['is_online'])

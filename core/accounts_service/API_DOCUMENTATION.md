@@ -8,7 +8,7 @@
   - `password` (string, required)
   - `password2` (string, required)
 - **Return:** JSON with:
-  - `user` (object with id, email, username, created_at, is_active)
+  - `user` (object with id, email, username, created_at, is_online)
   - `token` (string)
   - `message` (string)
 - **Authentication:** Not required
@@ -19,7 +19,7 @@
   - `email` (string, required)
   - `password` (string, required)
 - **Return:** JSON with:
-  - `user` (object with id, email, username, created_at, is_active)
+  - `user` (object with id, email, username, created_at, is_online)
   - `token` (string)
   - `message` (string)
 - **Authentication:** Not required
@@ -36,7 +36,7 @@
 - **Parameters:** None
 - **Return:** JSON with:
   - `id` (integer)
-  - `user` (object with id, email, username, created_at, is_active)
+  - `user` (object with id, email, username, created_at, is_online)
   - `bio` (string)
 - **Authentication:** Token required
 
@@ -46,7 +46,7 @@
   - `bio` (string, optional)
 - **Return:** JSON with:
   - `id` (integer)
-  - `user` (object with id, email, username, created_at, is_active)
+  - `user` (object with id, email, username, created_at, is_online)
   - `bio` (string)
 - **Authentication:** Token required
 
@@ -56,7 +56,7 @@
   - `avatar` (image file, required)
 - **Return:** JSON with:
   - `id` (integer)
-  - `user` (object with id, email, username, created_at, is_active)
+  - `user` (object with id, email, username, created_at, is_online)
   - `bio` (string)
   - `avatar` (string, URL)
 - **Authentication:** Token required
@@ -66,7 +66,7 @@
 - **Parameters:** None
 - **Return:** JSON with:
   - `id` (integer)
-  - `user` (object with id, email, username, created_at, is_active)
+  - `user` (object with id, email, username, created_at, is_online)
   - `bio` (string)
   - `avatar` (string, URL)
 - **Authentication:** Token required
@@ -114,5 +114,5 @@
   - `email` (string)
   - `username` (string)
   - `created_at` (string, timestamp)
-  - `is_active` (boolean)
+  - `is_online` (boolean)
 - **Authentication:** Token required

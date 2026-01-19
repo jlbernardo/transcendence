@@ -47,6 +47,8 @@ def login(request):
     serializer = UserLoginSerializer(data=request.data)
     if serializer.is_valid():
         user = serializer.validated_data['user']
+        user.is_online = True
+        user.save(update_fields=['is_online'])
         token, created = Token.objects.get_or_create(user=user)
         return Response({
             'user': UserSerializer(user).data,
@@ -65,6 +67,8 @@ def logout(request):
     User logout and token removal.
     """
     try:
+        request.user.is_online = False
+        request.user.save(update_fields=['is_online'])
         request.user.auth_token.delete()
         return Response(
             {'message': 'Logout successful.'},
