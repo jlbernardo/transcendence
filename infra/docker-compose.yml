@@ -8,37 +8,17 @@ services:
     ports:
       - "8080:80"
     depends_on:
-      - core
+      - accounts_service
     restart: always
 
-  core:
+  accounts_service:
     build:
-      context: ../core
-      dockerfile: ../infra/core.Dockerfile
-    image: core
-    container_name: core
-    volumes:
-      - data:/core/db
+      context: ..
+      dockerfile: infra/accounts_service.Dockerfile
     ports:
-      - "3000:3000"
-    depends_on:
-      - data
-    restart: "always"
-
-  data:
-    build:
-      context: ../data
-      dockerfile: ../infra/data.Dockerfile
-    image: data
-    container_name: data
+      - "8000:8000"
+    environment:
+      - DEBUG=False
     volumes:
-      - data:/data/db
+      - ../core/accounts_service:/app
     restart: always
-
-volumes:
-  data:
-    name: data
-    driver_opts:
-      o: bind
-      type: none
-      device: /Users/jubs/magit/trs/data
