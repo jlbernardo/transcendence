@@ -26,11 +26,17 @@ def register(request):
         user = serializer.save()
         token, created = Token.objects.get_or_create(user=user)
         return Response({
+            'success': True,
+            'message': 'User registered successfully.',
             'user': UserSerializer(user).data,
-            'token': token.key,
-            'message': 'User registered successfully.'
+            'token': token.key
         }, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    return Response({
+        'success': False,
+        'message': 'Registration failed. Please check the errors below.',
+        'errors': serializer.errors
+    }, status=status.HTTP_400_BAD_REQUEST)
 
 @extend_schema(
     request=UserLoginSerializer,
@@ -51,11 +57,17 @@ def login(request):
         user.save(update_fields=['is_online'])
         token, created = Token.objects.get_or_create(user=user)
         return Response({
+            'success': True,
+            'message': 'Login successful.',
             'user': UserSerializer(user).data,
-            'token': token.key,
-            'message': 'Login successful.'
+            'token': token.key
         }, status=status.HTTP_200_OK)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    return Response({
+        'success': False,
+        'message': 'Invalid credentials.',
+        'errors': serializer.errors
+    }, status=status.HTTP_400_BAD_REQUEST)
 
 @extend_schema(
     request=None,
@@ -70,12 +82,13 @@ def logout(request):
         request.user.is_online = False
         request.user.save(update_fields=['is_online'])
         request.user.auth_token.delete()
-        return Response(
-            {'message': 'Logout successful.'},
-            status=status.HTTP_200_OK
-        )
-    except:
-        return Response(
-            {'error': 'Logout failed.'},
-            status=status.HTTP_400_BAD_REQUEST
-        )
+        return Response({
+            'success': True,
+            'message': 'Logout successful.'
+        }, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({
+            'success': False,
+            'message': 'Logout failed.',
+            'error': str(e)
+        }, status=status.HTTP_400_BAD_REQUEST)
