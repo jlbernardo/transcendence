@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from accounts.views import auth
 from accounts.views import profile
+from accounts.views import friendship
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -32,6 +33,12 @@ urlpatterns = [
     # profile
     path('api/profile/', profile.profile, name='profile'),
     path('api/profile/avatar/', profile.avatar, name='avatar'),
+
+    # friends
+    path('api/friends/request/', friendship.send_friend_request, name='send_friend_request'),
+    path('api/friends/accept/', friendship.accept_friend_request, name='accept_friend_request'),
+    path('api/friends/pending/', friendship.list_pending_requests, name='list_pending_requests'),
+    path('api/friends/', friendship.list_friends, name='list_friends'),
 ]
 
 # Configuration to serve media

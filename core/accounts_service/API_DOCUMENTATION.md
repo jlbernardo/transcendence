@@ -70,3 +70,49 @@
   - `bio` (string)
   - `avatar` (string, URL)
 - **Authentication:** Token required
+
+## POST /api/friends/request/
+- **Description:** Sends a friend request to another user
+- **Parameters (body JSON):**
+  - `to_user_id` (integer, required)
+- **Return:** JSON with:
+  - `id` (integer)
+  - `from_user` (integer, user ID)
+  - `to_user` (integer, user ID)
+  - `accepted` (boolean)
+  - `created_at` (string, timestamp)
+- **Authentication:** Token required
+
+## POST /api/friends/accept/
+- **Description:** Accepts a friend request
+- **Parameters (body JSON):**
+  - `request_id` (integer, required)
+- **Return:** JSON with:
+  - `id` (integer)
+  - `from_user` (integer, user ID)
+  - `to_user` (integer, user ID)
+  - `accepted` (boolean)
+  - `created_at` (string, timestamp)
+- **Authentication:** Token required
+
+## GET /api/friends/pending/
+- **Description:** Returns all pending friend requests received by the authenticated user
+- **Parameters:** None
+- **Return:** JSON array with friend request objects containing:
+  - `id` (integer)
+  - `from_user` (object with user details)
+  - `to_user` (object with user details)
+  - `accepted` (boolean)
+  - `created_at` (string, timestamp)
+- **Authentication:** Token required
+
+## GET /api/friends/
+- **Description:** Returns list of authenticated user's friends
+- **Parameters:** None
+- **Return:** JSON array with user objects containing:
+  - `id` (integer)
+  - `email` (string)
+  - `username` (string)
+  - `created_at` (string, timestamp)
+  - `is_active` (boolean)
+- **Authentication:** Token required
