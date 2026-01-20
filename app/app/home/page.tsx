@@ -1,11 +1,35 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import Dropdown from "@/components/Dropdown";
-import FriendList from "@/components/Friends";
 import PersonalStats from "@/components/PersonalStats";
 import GeneralStats from "@/components/GeneralStats";
+import FriendSection from "@/components/FriendSection";
+import { getFriendsList, getPendingRequestsList } from "@/services/friendship";
+import { useEffect, useState } from "react";
+import { User, FriendsResponse } from "@/types/user";
 
 export default function Home() {
+  const [friends, setFriends] = useState<User[]>()
+  const [friendRequests, setFriendRequests] = useState<FriendsResponse[]>()
+
+  async function fetchFriendsAndRequests() {
+    try {
+      const response = await getFriendsList();
+      setFriends(response);
+      const requests = await getPendingRequestsList();
+      setFriendRequests(requests);
+  
+    } catch (error) {
+      console.error("ERROR:", error);
+    }
+  }
+
+  useEffect(() => {
+    fetchFriendsAndRequests();
+  }, []);
+  
   return (
     <>
       <div className="grid grid-cols-12 grid-rows-24 gap-2 h-dvh">
@@ -68,7 +92,10 @@ export default function Home() {
         </div>
 
         <div className="row-span-22 row-start-3 pt-1 mr-2 mb-6 col-span-2 col-start-11">
-          <FriendList />
+          <FriendSection 
+            friends={friends || []}
+            requests={friendRequests || []}
+          />
         </div>
       </div>
     </>

@@ -10,7 +10,8 @@ import { useUserStore } from "@/store/userStore";
 
 export default function Login() {
   const router = useRouter()
-  const { setProfile, setToken } = useUserStore().getState();
+  const setProfile = useUserStore((state) => state.setProfile);
+  const setToken = useUserStore((state) => state.setToken);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();

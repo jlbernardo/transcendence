@@ -7,7 +7,8 @@ import { logout } from '@/services/authentication';
 import api from '@/lib/axios_instance';
 
 export default function Dropdown() {
-    const { profile, logout: logoutStore } = useUserStore().getState();
+    const profile = useUserStore((state) => state.profile);
+    const logoutStore = useUserStore((state) => state.logout);
     const router = useRouter();
     
     async function handleLogout() {

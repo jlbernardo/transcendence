@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import Footer from "@/components/Footer";
+import AuthGate from "./auth-gate";
 
 const pixel = localFont({
   src: "../public/PixelFont.ttf",
@@ -22,7 +23,9 @@ export default function RootLayout({
       <body
         className={`${pixel.className} antialiased text-lg`}
       >
-        {children}
+        {/* <AuthGate> */}
+          {children}
+        {/* </AuthGate> */}
         <Footer />
       </body>
     </html>

@@ -31,3 +31,11 @@ export interface Profile {
   user: User;
   bio: string;
 }
+
+export interface FriendsResponse {
+  id: number;
+  from_user: User;
+  to_user: User;
+  accepted: boolean;
+  created_at: string;
+}
