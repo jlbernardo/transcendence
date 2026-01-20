@@ -1,7 +1,111 @@
-export default function Profile() {
-	return (
-		<>
-			<div>profile</div>
-		</>
-	)
-}
+"use client";
+
+import React, { useState } from 'react';
+import Link from "next/link";
+
+const ProfileCard = () => {
+  const [aboutMe, setAboutMe] = useState("Just a cat playing games...");
+  const [isEditing, setIsEditing] = useState(false);
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-purple-900 via-red-500 to-yellow-400 p-4 font-mono">
+      
+      {/* Container Principal - Estilo Robusto */}
+      <div className="w-full max-w-2xl bg-[#fbb034] border-4 border-[#5d1a1a] rounded-xl shadow-[8px_8px_0px_0px_rgba(0,0,0,0.2)] overflow-hidden">
+        
+        {/* Barra de Título com Link */}
+        <div className="bg-[#8b2b2b] p-2 border-b-4 border-[#5d1a1a] flex justify-between items-center px-4">
+          <h1 className="text-3xl text-[#fbb034] tracking-wider uppercase font-bold">Profile</h1>
+          <Link href="/" className="text-[#fbb034] hover:text-white text-sm font-bold border-2 border-[#fbb034] px-2 py-1 rounded">
+            VOLTAR
+          </Link>
+        </div>
+
+        <div className="p-6 text-[#5d1a1a]">
+          {/* Topo: Avatar e Informações */}
+          <div className="flex flex-wrap gap-6 mb-6">
+            <div className="w-32 h-32 bg-[#4a90e2] border-4 border-[#1a1a1a] rounded-lg flex items-center justify-center overflow-hidden">
+              <span className="text-6xl">🐱</span> 
+            </div>
+
+            <div className="flex-1 min-w-[200px]">
+              <h2 className="text-4xl font-bold mb-2 tracking-tight text-[#5d1a1a]">User42</h2>
+              
+              {/* About Me Editável - Estilo Botão/Caixa */}
+              <div 
+                className="bg-[#fbb034] border-4 border-[#5d1a1a] px-4 py-2 font-bold shadow-[4px_4px_0px_0px_#5d1a1a] cursor-pointer hover:bg-[#ffc25c] transition-all min-h-[60px]"
+                onClick={() => !isEditing && setIsEditing(true)}
+              >
+                <p className="text-[10px] uppercase mb-1 opacity-60">About Me:</p>
+                {isEditing ? (
+                  <textarea 
+                    autoFocus
+                    className="w-full bg-transparent border-none outline-none text-sm resize-none p-0 h-full font-bold"
+                    value={aboutMe}
+                    onChange={(e) => setAboutMe(e.target.value)}
+                    onBlur={() => setIsEditing(false)}
+                  />
+                ) : (
+                  <p className="text-sm italic">"{aboutMe}"</p>
+                )}
+              </div>
+              
+              <div className="mt-4 flex gap-8">
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl">📊</span>
+                  <span className="text-xl font-bold uppercase tracking-tighter">Win 0%</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl">👥</span>
+                  <span className="text-xl font-bold uppercase tracking-tighter">Friends 0</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex justify-between items-end mb-2">
+            <p className="text-xl font-bold italic">Status: <span className="text-teal-700 font-black">online</span></p>
+            <h3 className="text-3xl font-bold uppercase tracking-tighter">Stats</h3>
+          </div>
+
+          {/* Tabela de Rankings - Limpa e Espaçada */}
+          <div className="border-4 border-[#5d1a1a] bg-[#fbb034]">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="border-b-4 border-[#5d1a1a] bg-[#fcc15a]">
+                  <th className="p-2 border-r-4 border-[#5d1a1a] uppercase text-sm">Rank</th>
+                  <th className="p-2 border-r-4 border-[#5d1a1a] uppercase text-sm">Pseudo</th>
+                  <th className="p-2 border-r-4 border-[#5d1a1a] uppercase text-sm text-center">Win Rate</th>
+                  <th className="p-2 border-r-4 border-[#5d1a1a] uppercase text-sm text-center">Win</th>
+                  <th className="p-2 border-r-4 border-[#5d1a1a] uppercase text-sm text-center">Loss</th>
+                  <th className="p-2 uppercase text-sm text-center">Points</th>
+                </tr>
+              </thead>
+              <tbody className="font-bold">
+                {[
+                  { rank: "1 ✔", pseudo: "Test2", rate: "100%", w: 3, l: 2, p: 24 },
+                  { rank: "2", pseudo: "Test1", rate: "0%", w: 2, l: 2, p: 20 },
+                  { rank: "3", pseudo: "Test3", rate: "0%", w: 1, l: 1, p: 20 },
+                  { rank: "2", pseudo: "User4", rate: "0%", w: 0, l: 0, p: 8 },
+                ].map((row, i) => (
+                  <tr key={i} className={i % 2 === 0 ? "bg-[#fcc15a]" : "bg-[#fbb034]"}>
+                    <td className="p-2 border-r-4 border-[#5d1a1a]">{row.rank}</td>
+                    <td className="p-2 border-r-4 border-[#5d1a1a] hover:text-white transition-colors">
+                       <Link href={`/profile/${row.pseudo}`}>{row.pseudo}</Link>
+                    </td>
+                    <td className="p-2 border-r-4 border-[#5d1a1a] text-center">{row.rate}</td>
+                    <td className="p-2 border-r-4 border-[#5d1a1a] text-center">{row.w}</td>
+                    <td className="p-2 border-r-4 border-[#5d1a1a] text-center">{row.l}</td>
+                    <td className="p-2 text-center">{row.p}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ProfileCard;
