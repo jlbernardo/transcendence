@@ -20,7 +20,6 @@ export default function Home() {
       setFriends(response);
       const requests = await getPendingRequestsList();
       setFriendRequests(requests);
-  
     } catch (error) {
       console.error("ERROR:", error);
     }
@@ -95,6 +94,7 @@ export default function Home() {
           <FriendSection 
             friends={friends || []}
             requests={friendRequests || []}
+            onRequestHandled={fetchFriendsAndRequests}
           />
         </div>
       </div>
