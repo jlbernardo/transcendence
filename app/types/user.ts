@@ -25,3 +25,9 @@ export interface AuthResponse {
   token: string;
   errors?: Record<string, string[]>;
 }
+
+export interface Profile {
+  id: number;
+  user: User;
+  bio: string;
+}

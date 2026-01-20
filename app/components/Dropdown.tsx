@@ -1,8 +1,28 @@
+'use client';
+
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
-import Link from 'next/link'
+import { useRouter } from 'next/navigation';
+import { useUserStore } from '@/store/userStore'
+import { logout } from '@/services/authentication';
+import api from '@/lib/axios_instance';
 
 export default function Dropdown() {
-  return (
+    const { profile, logout: logoutStore } = useUserStore().getState();
+    const router = useRouter();
+    
+    async function handleLogout() {
+        try {
+            await logout();
+            delete api.defaults.headers.common["Authorization"];
+            logoutStore();
+            router.push('/');
+        } catch (error) {
+            console.error('Logout failed:', error);
+            alert('Failed to logout. Please try again.');
+        }
+    }
+    
+    return (
     <Menu as="div">
       <MenuButton className="w-full">
         <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -18,7 +38,7 @@ export default function Dropdown() {
       >
         <div className="py-1">
           <p className="px-4 pt-1 text-sm text-gray-400">Signed in as</p>
-          <p className="px-4 pb-2 text-sm font-medium text-white truncate">user@example.com</p>
+          <p className="px-4 pb-2 text-sm font-medium text-white truncate">{profile?.user.email || "Guest"}</p>
         </div>
         <div className="py-1">
           <MenuItem>
@@ -58,11 +78,12 @@ export default function Dropdown() {
         </div>
         <div className="py-1">
           <MenuItem>
-            <Link href="/"
-              className="block px-4 py-2 text-sm text-gray-300 data-focus:bg-white/5 data-focus:text-white data-focus:outline-hidden"
+            <button
+              onClick={handleLogout}
+              className="block w-full text-left px-4 py-2 text-sm text-gray-300 data-focus:bg-white/5 data-focus:text-white data-focus:outline-hidden"
             >
               Sign out
-            </Link>
+            </button>
           </MenuItem>
         </div>
       </MenuItems>

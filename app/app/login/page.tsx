@@ -2,12 +2,15 @@
 
 import Link from "next/link";
 import { LoginData } from "@/types/user";
-import { login } from "@/services/auth_login";
+import { login } from "@/services/authentication";
+import { getProfile } from "@/services/profile"
 import { useRouter } from "next/navigation";
 import api from "@/lib/axios_instance";
+import { useUserStore } from "@/store/userStore";
 
 export default function Login() {
   const router = useRouter()
+  const { setProfile, setToken } = useUserStore().getState();
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -15,7 +18,6 @@ export default function Login() {
     const formData = new FormData(event.currentTarget);
     const data: LoginData = {
       email: formData.get('email') as string,
-      // username: formData.get('username') as string,
       password: formData.get('password') as string,
     };
 
@@ -23,13 +25,17 @@ export default function Login() {
       const response = await login(data);
       console.log("Full response:", response);
 
-      // seta token default no axios
+      setToken(response.token)
       api.defaults.headers.common["Authorization"] = `token ${response.token}`;
+
+      const profile_response = await getProfile();
+      console.log("Profile response:", profile_response);
+      setProfile(profile_response)
 
       alert("Login successful");
       router.push('/home');
     } catch (error: any) {
-      console.error("ERROR:");
+      console.error("ERROR: ", error);
       alert("Login failed! Check console for details.");
     }
    

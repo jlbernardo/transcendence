@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { RegisterData } from "@/types/user";
-import { register } from "@/services/auth_register";
+import { register } from "@/services/authentication";
 import { useRouter } from "next/navigation";
 
 export default function Login() {
