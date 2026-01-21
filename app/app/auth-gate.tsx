@@ -21,15 +21,14 @@ export default function AuthGate({children}: { children: React.ReactNode;}) {
     const is_public_path = PUBLIC_ROUTES.includes(pathname);
 
     useEffect(() => {
-        // if (!hydrated) {
-        //     console.log("Awaiting localStorage hydration...");
-        //     return;
-        // }
+        if (!hydrated) {
+            return;
+        }
 
         if (!token && !is_public_path) {
-            router.replace("/unauthorized");
+            router.replace("/login");
         }
-        if (token && (pathname === "/login" || pathname === "/register" || pathname === "/")) {
+        if (token && (pathname === "/login" || pathname === "/register")) {
             router.replace("/home");
         }
     }, [hydrated, token, pathname, is_public_path, router]);

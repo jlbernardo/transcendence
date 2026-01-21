@@ -23,9 +23,9 @@ export default function RootLayout({
       <body
         className={`${pixel.className} antialiased text-lg`}
       >
-        {/* <AuthGate> */}
+        <AuthGate>
           {children}
-        {/* </AuthGate> */}
+        </AuthGate>
         <Footer />
       </body>
     </html>

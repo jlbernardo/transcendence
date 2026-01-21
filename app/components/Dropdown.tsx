@@ -4,7 +4,6 @@ import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { useRouter } from 'next/navigation';
 import { useUserStore } from '@/store/userStore'
 import { logout } from '@/services/authentication';
-import api from '@/lib/axios_instance';
 
 export default function Dropdown() {
     const profile = useUserStore((state) => state.profile);
@@ -12,14 +11,12 @@ export default function Dropdown() {
     const router = useRouter();
     
     async function handleLogout() {
+        logoutStore();
+        router.replace('/login');
         try {
             await logout();
-            delete api.defaults.headers.common["Authorization"];
-            logoutStore();
-            router.push('/');
         } catch (error) {
-            console.error('Logout failed:', error);
-            alert('Failed to logout. Please try again.');
+            console.error('Logout failed on backend:', error);
         }
     }
     

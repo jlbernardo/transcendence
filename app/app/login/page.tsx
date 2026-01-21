@@ -5,7 +5,6 @@ import { LoginData } from "@/types/user";
 import { login } from "@/services/authentication";
 import { getProfile } from "@/services/profile"
 import { useRouter } from "next/navigation";
-import api from "@/lib/axios_instance";
 import { useUserStore } from "@/store/userStore";
 
 export default function Login() {
@@ -26,12 +25,11 @@ export default function Login() {
       const response = await login(data);
       console.log("Full response:", response);
 
-      setToken(response.token)
-      api.defaults.headers.common["Authorization"] = `token ${response.token}`;
+      setToken(response.token);
 
       const profile_response = await getProfile();
       console.log("Profile response:", profile_response);
-      setProfile(profile_response)
+      setProfile(profile_response);
 
       alert("Login successful");
       router.push('/home');

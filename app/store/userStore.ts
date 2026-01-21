@@ -1,6 +1,7 @@
 import { create } from "zustand/react";
 import { persist, createJSONStorage } from "zustand/middleware"; // persist to store in localStorage
 import { Profile } from '@/types/user'
+import { setTokenInHeader } from '@/lib/axios_instance';
 
 interface UserStore {
     profile: Profile | null;
@@ -17,15 +18,25 @@ export const useUserStore = create<UserStore>()(
                 profile: null,
                 setProfile: (user) => set({ profile: user }),
                 token: null,
-                setToken: (token) => set({ token }),
-                logout: () => set({ profile: null, token: null }),
+                setToken: (token) => {
+                    setTokenInHeader(token);
+                    set({ token });
+                },
+                logout: () => {
+                    setTokenInHeader(null);
+                    set({ profile: null, token: null });
+                },
                 hydrated: false,
             }),
         {
             name: 'user-storage', // key in localStorage
             storage: createJSONStorage(() => localStorage), // localStorage
             onRehydrateStorage: () => (state) => { // avoid flash of pages before hydration
-                state!.hydrated = true;
+                if (state) {
+                    // restore token to axios headers after rehydration
+                    setTokenInHeader(state.token);
+                    state.hydrated = true;
+                }
             },
         }
     )
