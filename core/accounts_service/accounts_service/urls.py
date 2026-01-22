@@ -17,14 +17,38 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from accounts.views import auth
+from accounts.views import profile
+from accounts.views import friendship
+from django.conf import settings
+from django.conf.urls.static import static
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularSwaggerView
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
+    # auth
     path('api/auth/register/', auth.register, name='register'),
     path('api/auth/login/', auth.login, name='login'),
     path('api/auth/logout/', auth.logout, name='logout'),
 
-    # test with token
-    path('api/auth/profile/', auth.user_profile, name='user_profile'),
+    # profile
+    path('api/profile/', profile.profile, name='profile'),
+    path('api/profile/avatar/', profile.avatar, name='avatar'),
+
+    # friends
+    path('api/friends/request/', friendship.send_friend_request, name='send_friend_request'),
+    path('api/friends/accept/', friendship.accept_friend_request, name='accept_friend_request'),
+    path('api/friends/pending/', friendship.list_pending_requests, name='list_pending_requests'),
+    path('api/friends/', friendship.list_friends, name='list_friends'),
+
+    # API
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema')),
 ]
+
+# Configuration to serve media
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

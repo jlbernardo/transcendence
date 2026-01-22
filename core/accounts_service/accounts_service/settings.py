@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -39,11 +40,15 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
+    'corsheaders',
+    'imagekit',
     'accounts',
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -131,9 +136,42 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',
-    ]
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle'
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '100/day',
+        'user': '1000/day'
+    },
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Accounts Service API',
+    'DESCRIPTION': 'Public API documentation',
+    'VERSION': '1.0.0',
+    'SECURITY': [{'TokenAuth': []}],
+    'COMPONENTS': {
+        'securitySchemes': {
+            'TokenAuth': {
+                'type': 'apiKey',
+                'in': 'header',
+                'name': 'Authorization',
+                'description': 'Token-based authentication. Format: "Token <token>"',
+            },
+        },
+    },
 }
 
 # Auth
 AUTH_USER_MODEL = 'accounts.CustomUser'
+
+# settings to handle media files
+MEDIA_ROOT =  os.path.join(BASE_DIR, 'images') # path to store images
+MEDIA_URL = '/images/' # url to see images
+# CORS settings - Allow all origins in development
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True

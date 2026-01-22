@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Avatar upload</title>
+</head>
+<body>
+  <h2>Upload avatar</h2>
+  <input type="file" id="file" accept="image/*" />
+  <button onclick="upload()">Upload</button>
+  <button onclick="loadProfile()">Load Profile</button>
+  <div id="profile"></div>
+
+  <script>
+    const TOKEN = '13080f9951d46afdfd7c40a70324af9c1c3b93f2';
+    const API = 'http://localhost:8000';
+
+    async function upload() {
+      const form = new FormData();
+      form.append('avatar', file.files[0]);
+      await fetch(`${API}/api/profile/avatar/`, {
+        method: 'PUT',
+        headers: { 'Authorization': `token ${TOKEN}` },
+        body: form
+      });
+      loadProfile();
+    }
+
+    async function loadProfile() {
+      const res = await fetch(`${API}/api/profile/`, {
+        headers: { 'Authorization': `token ${TOKEN}` }
+      });
+      const data = await res.json();
+      profile.innerHTML = `
+        <p>Username: ${data.user.username}</p>
+        <p>Email: ${data.user.email}</p>
+        <p>Bio: ${data.bio}</p>
+        ${data.avatar ? `<img src="${API}${data.avatar}" width="200">` : ''}
+      `;
+    }
+  </script>
+</body>
+</html>

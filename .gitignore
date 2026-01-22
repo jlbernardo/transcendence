@@ -1,0 +1,20 @@
+# Vscode
+.vscode/
+
+# Node.js
+**/node_modules/
+
+# Build outputs
+**/dist/
+
+# Python
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Django
+db.sqlite3
+
+# Core/accounts_service
+images/avatars/user*
