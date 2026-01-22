@@ -1,4 +1,4 @@
-import api from "@/lib/axios_instance";
+import { api } from "@/lib/axios_instance";
 import { FriendsResponse, User} from "@/types/user";
 
 export async function getFriendsList() {

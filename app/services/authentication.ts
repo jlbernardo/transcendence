@@ -1,4 +1,4 @@
-import api from '../lib/axios_instance'
+import { api } from '../lib/axios_instance'
 import { LoginData, AuthResponse, RegisterData } from '@/types/user'
 
 export async function register(data: RegisterData) {

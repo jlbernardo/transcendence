@@ -1,4 +1,4 @@
-import api from "@/lib/axios_instance";
+import { api } from "@/lib/axios_instance";
 import { Profile } from "@/types/user";
 
 export async function getProfile() {
