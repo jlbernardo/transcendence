@@ -9,19 +9,24 @@ import FriendSection from "@/components/FriendSection";
 import { getFriendsList, getPendingRequestsList } from "@/services/friendship";
 import { useEffect, useState } from "react";
 import { User, FriendsResponse } from "@/types/user";
+import { LoadingPong } from "@/components/LoadingPong";
 
 export default function Home() {
   const [friends, setFriends] = useState<User[]>()
   const [friendRequests, setFriendRequests] = useState<FriendsResponse[]>()
+  const [isLoading, setIsLoading] = useState(false)
 
   async function fetchFriendsAndRequests() {
     try {
+      setIsLoading(true);
       const response = await getFriendsList();
       setFriends(response);
       const requests = await getPendingRequestsList();
       setFriendRequests(requests);
     } catch (error) {
       console.error("ERROR:", error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -98,6 +103,7 @@ export default function Home() {
           />
         </div>
       </div>
+      <LoadingPong visible={isLoading} />
     </>
   );
 }

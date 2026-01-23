@@ -4,19 +4,25 @@ import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { useRouter } from 'next/navigation';
 import { useUserStore } from '@/store/userStore'
 import { logout } from '@/services/authentication';
+import { useState } from 'react';
 
 export default function Dropdown() {
     const profile = useUserStore((state) => state.profile);
     const logoutStore = useUserStore((state) => state.logout);
     const router = useRouter();
+    const [isLoading, setIsLoading] = useState(false);
     
     async function handleLogout() {
-        logoutStore();
-        router.replace('/login');
         try {
-            await logout();
+            setIsLoading(true);
+            const response = await logout();
+            console.log('Logout completed successfully');
+            logoutStore();
+            router.replace('/login');
         } catch (error) {
             console.error('Logout failed on backend:', error);
+        } finally {
+            setIsLoading(false);
         }
     }
     

@@ -6,11 +6,14 @@ import { login } from "@/services/authentication";
 import { getProfile } from "@/services/profile"
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/store/userStore";
+import { useState } from "react";
+import { LoadingPong } from "@/components/LoadingPong";
 
 export default function Login() {
   const router = useRouter()
   const setProfile = useUserStore((state) => state.setProfile);
   const setToken = useUserStore((state) => state.setToken);
+  const [isLoading, setIsLoading] = useState(false);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -22,6 +25,7 @@ export default function Login() {
     };
 
     try {
+      setIsLoading(true);
       const response = await login(data);
       console.log("Full response:", response);
 
@@ -31,14 +35,15 @@ export default function Login() {
       console.log("Profile response:", profile_response);
       setProfile(profile_response);
 
-      alert("Login successful");
       router.push('/home');
     } catch (error: any) {
       console.error("ERROR: ", error);
       alert("Login failed! Check console for details.");
+    } finally {
+      setIsLoading(false);
     }
-   
   }
+
 	return (
 		<>
 			<div className="min-h-screen flex flex-col items-center justify-center">
@@ -74,6 +79,7 @@ export default function Login() {
           </p>
         </div>
 			</div>
+      <LoadingPong visible={isLoading} />
 		</>
 	)
 }

@@ -3,6 +3,7 @@
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useUserStore } from "@/store/userStore";
+import { LoadingPong } from "@/components/LoadingPong";
 
 const PUBLIC_ROUTES = [
     "/",
@@ -32,6 +33,10 @@ export default function AuthGate({children}: { children: React.ReactNode;}) {
             router.replace("/home");
         }
     }, [hydrated, token, pathname, is_public_path, router]);
+
+    if (!hydrated) {
+        return <LoadingPong visible={true}/>;
+    }
 
     return <>{children}</>;
 }

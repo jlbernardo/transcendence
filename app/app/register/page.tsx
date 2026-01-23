@@ -4,9 +4,12 @@ import Link from "next/link";
 import { RegisterData } from "@/types/user";
 import { register } from "@/services/authentication";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { LoadingPong } from "@/components/LoadingPong";
 
 export default function Login() {
     const router = useRouter();
+    const [isLoading, setIsLoading] = useState(false);
 
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -20,13 +23,15 @@ export default function Login() {
         };
         
         try {
+            setIsLoading(true);
             const response = await register(data);
             console.log("Full response:", response);
-            alert("Registration successful");
             router.push('/login');
         } catch (error: any) {
             console.error("ERROR:");
             alert("Registration failed! Check console for details.");
+        } finally {
+            setIsLoading(false);
         }
     }
 
@@ -74,6 +79,7 @@ export default function Login() {
                     </p>
                 </div>
             </div>
+            <LoadingPong visible={isLoading} />
         </>
     )
 }
