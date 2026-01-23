@@ -1,5 +1,5 @@
-import { acceptFriendRequest } from "@/services/friendship";
-import { FriendsResponse as Requests } from "@/types/user";
+import { acceptFriendRequest, rejectFriendRequest } from "@/services/friendship";
+import { FriendRequest as Requests } from "@/types/user";
 
 interface Props {
     requests: Requests[];
@@ -14,7 +14,7 @@ export default function FriendRequestList({ requests, onRequestHandled }: Props)
                 console.log("Friend request accepted");
             }
             else {
-            //     await rejectFriendRequest(request_id);
+                await rejectFriendRequest(request_id);
                 console.log("Friend request rejected");
             }
             onRequestHandled(); 

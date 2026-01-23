@@ -41,6 +41,7 @@ urlpatterns = [
     # friends
     path('api/friends/request/', friendship.send_friend_request, name='send_friend_request'),
     path('api/friends/accept/', friendship.accept_friend_request, name='accept_friend_request'),
+    path('api/friends/reject/<int:request_id>/', friendship.reject_friend_request, name='reject_friend_request'),
     path('api/friends/pending/', friendship.list_pending_requests, name='list_pending_requests'),
     path('api/friends/', friendship.list_friends, name='list_friends'),
 

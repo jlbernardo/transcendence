@@ -1,10 +1,10 @@
 import FriendList from "./FriendList";
-import { User, FriendsResponse } from "@/types/user";
+import { User, FriendRequest } from "@/types/user";
 import FriendRequestList from "./FriendRequestList";
 
 interface Props {
   friends: User[];
-  requests: FriendsResponse[];
+  requests: FriendRequest[];
   onRequestHandled: () => void;
 }
 

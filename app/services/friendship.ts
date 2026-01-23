@@ -1,8 +1,8 @@
 import { api } from "@/lib/axios_instance";
-import { FriendsResponse, User} from "@/types/user";
+import { FriendListResponse, FriendsResponse} from "@/types/user";
 
 export async function getFriendsList() {
-    const response = await api.get<User[]>("/friends/");
+    const response = await api.get<FriendListResponse>("/friends/");
     return response.data;
 }
 
@@ -16,7 +16,12 @@ export async function acceptFriendRequest(request_id: number) {
     return response.data;
 }
 
+export async function rejectFriendRequest(request_id: number) {
+    const response = await api.delete<FriendsResponse>(`/friends/reject/${request_id}/`);
+    return response.data;
+}
+
 export async function getPendingRequestsList() {
-    const response = await api.get<FriendsResponse[]>("/friends/pending/");
+    const response = await api.get<FriendsResponse>("/friends/pending/");
     return response.data;
 }

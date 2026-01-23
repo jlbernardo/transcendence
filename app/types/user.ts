@@ -32,7 +32,21 @@ export interface Profile {
   bio: string;
 }
 
+export interface FriendListResponse {
+  success: boolean;
+  message: string;
+  error: string;
+  data?: User[];
+}
+
 export interface FriendsResponse {
+  success: boolean;
+  message: string;
+  error: string;
+  data?: FriendRequest[];
+}
+
+export interface FriendRequest {
   id: number;
   from_user: User;
   to_user: User;

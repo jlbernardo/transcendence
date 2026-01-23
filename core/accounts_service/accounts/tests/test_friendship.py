@@ -11,6 +11,7 @@ class FriendshipTestCase(TestCase):
         self.login_url = reverse('login')
         self.send_request_url = reverse('send_friend_request')
         self.accept_request_url = reverse('accept_friend_request')
+        self.reject_request_url = '/api/friends/reject'
         self.list_pending_requests_url = reverse('list_pending_requests')
         self.list_friends_url = reverse('list_friends')
         
@@ -517,3 +518,26 @@ class FriendshipTestCase(TestCase):
         self.assertEqual(len(response.data), 1)
         self.assertEqual(response.data[0]['id'], self.user2.id)
         self.assertFalse(response.data[0]['is_online'])
+
+    def test_reject_friend_request(self):
+        """
+        Test that user can delete a friend request sent to them
+        """
+        friend_request = FriendRequest.objects.create(
+            from_user=self.user1,
+            to_user=self.user2,
+            accepted=False
+        )
+        
+        data = {
+            "request_id": friend_request.id
+        }
+        response = self.client.delete(
+            reverse('reject_friend_request', args=[friend_request.id]),
+            HTTP_AUTHORIZATION=f'Token {self.token_user2}',
+            format='json'
+        )
+        print(f'response to reject friend request: {response}')
+        
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
