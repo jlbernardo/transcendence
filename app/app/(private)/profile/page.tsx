@@ -2,19 +2,36 @@
 
 import React, { useState } from 'react';
 import Link from "next/link";
+import Image from "next/image";
+import Dropdown from "@/components/Dropdown";
 
 const ProfileCard = () => {
   const [aboutMe, setAboutMe] = useState("Just a cat playing games...");
   const [isEditing, setIsEditing] = useState(false);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-purple-900 via-red-500 to-yellow-400 p-4 font-mono">
+    <div className=" items-center justify-center">      
+    <div className="grid grid-cols-12 gap-2 mb-4">
+        <div className="col-span-1">
+          <Link href="/home">
+            <Image src="/home.svg" alt="home" className="pt-4 ml-5" width={31} height={31} />
+          </Link>
+        </div>
+        <div className="col-span-10">
+          {/* @ts-expect-error: marquee */}
+          <marquee className="pt-2">latest news</marquee>
+        </div>
+        <div className="col-span-1 flex justify-end mr-8">
+          <Dropdown />
+        </div>
+      </div>
       
       {/* Container Principal - Estilo Robusto */}
-      <div className="w-full max-w-2xl bg-[#fbb034] border-4 border-[#5d1a1a] rounded-xl shadow-[8px_8px_0px_0px_rgba(0,0,0,0.2)] overflow-hidden">
-        
-        {/* Barra de Título com Link */}
-        <div className="bg-[#8b2b2b] p-2 border-b-4 border-[#5d1a1a] flex justify-between items-center px-4">
+      <div className="flex items-center justify-center flex-1">
+        <div className="w-full max-w-[500px] bg-[#fbb034] border-4 border-[#5d1a1a] rounded-xl shadow-[8px_8px_0px_0px_rgba(0,0,0,0.2)] overflow-hidden">
+          
+          {/* Barra de Título com Link */}
+          <div className="bg-[#8b2b2b] p-2 border-b-4 border-[#5d1a1a] flex justify-between items-center px-4">
           <h1 className="text-3xl text-[#fbb034] tracking-wider uppercase font-bold">Profile</h1>
           <Link href="/" className="text-[#fbb034] hover:text-white text-sm font-bold border-2 border-[#fbb034] px-2 py-1 rounded">
             VOLTAR
@@ -102,6 +119,7 @@ const ProfileCard = () => {
               </tbody>
             </table>
           </div>
+        </div>
         </div>
       </div>
     </div>
