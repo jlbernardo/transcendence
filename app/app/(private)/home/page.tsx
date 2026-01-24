@@ -7,13 +7,19 @@ import Header from "@/components/Header";
 import { LoadingPong } from "@/components/LoadingPong";
 import { getFriendsList, getPendingRequestsList } from "@/services/friendship";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { User, FriendRequest } from "@/types/user";
 import StatsBox from "@/components/StatsBox";
+import { Button } from "@headlessui/react";
+import { Modal } from "@/components/Modal";
 
 export default function Home() {
+  const router = useRouter();
   const [friends, setFriends] = useState<User[]>()
   const [friendRequests, setFriendRequests] = useState<FriendRequest[]>()
   const [isLoading, setIsLoading] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [message, setMessage] = useState<string>("");
 
   async function fetchFriendsAndRequests() {
     try {
@@ -57,40 +63,50 @@ export default function Home() {
             ]} />
           </div>
 
-          <Link href="/chat" className="row-span-1 row-start-10 col-span-2">
+          <Button 
+            onClick={() => {setIsModalOpen(true); setMessage("Chat feature coming soon!")}}
+            className=" cursor-pointer row-span-1 row-start-10 col-span-2">
             <div className="flex flex-col items-center">
-              <Image src="/chat.svg" alt="conversations" width={100} height={100} />
+              <Image src="/chat.svg" alt="chat" width={100} height={100} />
               <p className="text-3xl mt-3 text-amber-100">conversations</p>
             </div>
-          </Link>
+          </Button>
 
-          <Link href="/lobby" className="row-span-1 row-start-10 col-span-2">
+          <Button
+            onClick={() => {setIsModalOpen(true); setMessage("Lobby feature coming soon!")}}
+            className="cursor-pointer row-span-1 row-start-10 col-span-2">
             <div className="flex flex-col items-center">
               <Image src="/lobby.svg" alt="lobby" width={100} height={100} />
               <p className="text-3xl mt-3 text-amber-100">lobby</p>
             </div>
-          </Link>
+          </Button>
 
-          <Link href="/game" className="row-span-1 row-start-10 col-span-2">
+          <Button
+            onClick={() => {router.push('/game')}}
+            className="cursor-pointer row-span-1 row-start-10 col-span-2">
             <div className="flex flex-col items-center">
               <Image src="/matchmaking.svg" alt="matchmaking" width={100} height={100} />
               <p className="text-3xl mt-3 text-amber-100">game</p>
             </div>
-          </Link>
+          </Button>
 
-          <Link href="/tournament" className="row-span-1 row-start-10 col-span-2">
+          <Button
+            onClick={() => {setIsModalOpen(true); setMessage("Tournament feature coming soon!")}}
+            className="cursor-pointer row-span-1 row-start-10 col-span-2">
             <div className="flex flex-col items-center">
               <Image src="/tournament.svg" alt="tournament" width={100} height={100} />
               <p className="text-3xl mt-3 text-amber-100">tournament</p>
             </div>
-          </Link>
+          </Button>
 
-          <Link href="/search" className="row-span-1 row-start-10 col-span-2">
+          <Button
+            onClick={() => {setIsModalOpen(true); setMessage("Find new friends feature coming soon!")}}
+            className="cursor-pointer row-span-1 row-start-10 col-span-2">
             <div className="flex flex-col items-center">
               <Image src="/search.svg" alt="find new friends" width={100} height={100} />
               <p className="text-3xl mt-3 text-amber-100">find new friends</p>
             </div>
-          </Link>
+          </Button>
         </div>
 
         <div className="row-span-22 row-start-3 pt-1 mr-2 mb-6 col-span-2 col-start-11">
@@ -102,6 +118,11 @@ export default function Home() {
         </div>
       </div>
       <LoadingPong visible={isLoading} />
+      <Modal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}>
+        <p className="text-black">{message}</p>
+      </Modal>
     </>
   );
 }

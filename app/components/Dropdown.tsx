@@ -44,7 +44,7 @@ export default function Dropdown() {
           <p className="px-4 pt-1 text-sm text-gray-400">Signed in as</p>
           <p className="px-4 pb-2 text-sm font-medium text-white truncate">{profile?.user.email || "Guest"}</p>
         </div>
-        <div className="py-1">
+        {/* <div className="py-1">
           <MenuItem>
             <a
               href="/friends"
@@ -53,7 +53,7 @@ export default function Dropdown() {
               Friends
             </a>
           </MenuItem>
-          <MenuItem>
+           <MenuItem>
             <a
               href="/chat"
               className="block px-4 py-2 text-sm text-gray-300 data-focus:bg-white/5 data-focus:text-white data-focus:outline-hidden"
@@ -61,7 +61,7 @@ export default function Dropdown() {
               Conversations
             </a>
           </MenuItem>
-        </div>
+        </div> */}
         <div className="py-1">
           <MenuItem>
             <a
@@ -71,14 +71,14 @@ export default function Dropdown() {
               Profile
             </a>
           </MenuItem>
-          <MenuItem>
+          {/* <MenuItem>
             <a
               href="/settings"
               className="block px-4 py-2 text-sm text-gray-300 data-focus:bg-white/5 data-focus:text-white data-focus:outline-hidden"
             >
               Account settings
             </a>
-          </MenuItem>
+          </MenuItem> */}
         </div>
         <div className="py-1">
           <MenuItem>
