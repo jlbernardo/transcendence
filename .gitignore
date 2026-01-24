@@ -1,0 +1,15 @@
+# Vscode
+.vscode/
+
+# Node.js
+**/node_modules/
+
+# Build outputs
+**/dist/
+
+# Python
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+

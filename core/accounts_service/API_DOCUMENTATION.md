@@ -8,7 +8,7 @@
   - `password` (string, required)
   - `password2` (string, required)
 - **Return:** JSON with:
-  - `user` (object with id, email, username, created_at, is_active)
+  - `user` (object with id, email, username, created_at, is_online)
   - `token` (string)
   - `message` (string)
 - **Authentication:** Not required
@@ -19,7 +19,7 @@
   - `email` (string, required)
   - `password` (string, required)
 - **Return:** JSON with:
-  - `user` (object with id, email, username, created_at, is_active)
+  - `user` (object with id, email, username, created_at, is_online)
   - `token` (string)
   - `message` (string)
 - **Authentication:** Not required
@@ -31,13 +31,120 @@
   - `message` (string)
 - **Authentication:** Token required
 
-## GET /api/auth/profile/
+## GET /api/profile/
 - **Description:** Returns authenticated user profile
 - **Parameters:** None
 - **Return:** JSON with:
   - `id` (integer)
-  - `email` (string)
-  - `username` (string)
-  - `created_at` (datetime)
-  - `is_active` (boolean)
+  - `user` (object with id, email, username, created_at, is_online)
+  - `bio` (string)
+- **Authentication:** Token required
+
+## PUT /api/profile/
+- **Description:** Updates authenticated user profile
+- **Parameters:** JSON with:
+  - `bio` (string, optional)
+- **Return:** JSON with:
+  - `id` (integer)
+  - `user` (object with id, email, username, created_at, is_online)
+  - `bio` (string)
+- **Authentication:** Token required
+
+## PUT /api/profile/avatar/
+- **Description:** Updates image file for authenticated user profile
+- **Parameters:** multipart/form-data with:
+  - `avatar` (image file, required)
+- **Return:** JSON with:
+  - `id` (integer)
+  - `user` (object with id, email, username, created_at, is_online)
+  - `bio` (string)
+  - `avatar` (string, URL)
+- **Authentication:** Token required
+
+## DELETE /api/profile/avatar/
+- **Description:** Deletes image file for authenticated user profile
+- **Parameters:** None
+- **Return:** JSON with:
+  - `id` (integer)
+  - `user` (object with id, email, username, created_at, is_online)
+  - `bio` (string)
+  - `avatar` (string, URL)
+- **Authentication:** Token required
+
+## POST /api/friends/request/
+- **Description:** Sends a friend request to another user
+- **Parameters (body JSON):**
+  - `to_user_id` (integer, required)
+- **Return:** JSON with:
+  - `data` (object):
+    - `id` (integer)
+    - `from_user` (integer, user ID)
+    - `to_user` (integer, user ID)
+    - `accepted` (boolean)
+    - `created_at` (string, timestamp)
+  - `success` (boolean)
+  - `error` (string)
+  - `message` (string)
+- **Authentication:** Token required
+
+## POST /api/friends/accept/
+- **Description:** Accepts a friend request
+- **Parameters (body JSON):**
+  - `request_id` (integer, required)
+- **Return:** JSON with:
+  - `data` (object):
+    - `id` (integer)
+    - `from_user` (integer, user ID)
+    - `to_user` (integer, user ID)
+    - `accepted` (boolean)
+    - `created_at` (string, timestamp)
+  - `success` (boolean)
+  - `error` (string)
+  - `message` (string)
+- **Authentication:** Token required
+
+## GET /api/friends/pending/
+- **Description:** Returns all pending friend requests received by the authenticated user
+- **Parameters:** None
+- **Return:** JSON array with friend request objects containing:
+  - `data` (object):
+    - `id` (integer)
+    - `from_user` (integer, user ID)
+    - `to_user` (integer, user ID)
+    - `accepted` (boolean)
+    - `created_at` (string, timestamp)
+  - `success` (boolean)
+  - `error` (string)
+  - `message` (string)
+- **Authentication:** Token required
+
+## GET /api/friends/
+- **Description:** Returns list of authenticated user's friends
+- **Parameters:** None
+- **Return:** JSON array with user objects containing:
+  - `data` (object):
+    - `id` (integer)
+    - `from_user` (integer, user ID)
+    - `to_user` (integer, user ID)
+    - `accepted` (boolean)
+    - `created_at` (string, timestamp)
+  - `success` (boolean)
+  - `error` (string)
+  - `message` (string)
+- **Authentication:** Token required
+
+## DELETE /api/friends/reject/{request_id}/
+- **Description:** Rejects (deletes) a pending friend request received by the authenticated user
+- **Parameters (URL path):**
+  - `request_id` (integer, required)
+- **Return:** JSON with:
+  - `data` (object):
+    - `id` (integer)
+    - `from_user` (integer, user ID)
+    - `to_user` (integer, user ID)
+    - `accepted` (boolean)
+    - `created_at` (string, timestamp)
+  - `success` (boolean)
+  - `error` (string)
+  - `message` (string)
 - **Authentication:** Token required

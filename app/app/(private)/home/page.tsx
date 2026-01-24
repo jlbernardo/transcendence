@@ -1,11 +1,40 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import Dropdown from "@/components/Dropdown";
-import FriendList from "@/components/Friends";
 import PersonalStats from "@/components/PersonalStats";
 import GeneralStats from "@/components/GeneralStats";
+import FriendSection from "@/components/FriendSection";
+import { getFriendsList, getPendingRequestsList } from "@/services/friendship";
+import { useEffect, useState } from "react";
+import { User, FriendsResponse, FriendRequest, FriendListResponse } from "@/types/user";
+import { LoadingPong } from "@/components/LoadingPong";
 
 export default function Home() {
+  const [friends, setFriends] = useState<User[]>()
+  const [friendRequests, setFriendRequests] = useState<FriendRequest[]>()
+  const [isLoading, setIsLoading] = useState(false)
+
+  async function fetchFriendsAndRequests() {
+    try {
+      setIsLoading(true);
+      const response = await getFriendsList();
+      setFriends(response.data);
+      const requests = await getPendingRequestsList();
+      console.log("FRIEND REQUESTS:", requests.data);
+      setFriendRequests(requests.data);
+    } catch (error) {
+      console.error("ERROR:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    fetchFriendsAndRequests();
+  }, []);
+  
   return (
     <>
       <div className="grid grid-cols-12 grid-rows-24 gap-2 h-dvh">
@@ -68,9 +97,14 @@ export default function Home() {
         </div>
 
         <div className="row-span-22 row-start-3 pt-1 mr-2 mb-6 col-span-2 col-start-11">
-          <FriendList />
+          <FriendSection 
+            friends={friends || []}
+            requests={friendRequests || []}
+            onRequestHandled={fetchFriendsAndRequests}
+          />
         </div>
       </div>
+      <LoadingPong visible={isLoading} />
     </>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { GameInstructions } from "@/components/GameInstructions";
+import { LoadingPong } from "./LoadingPong";
 
 interface LobbyProps {
   onCreateRoom: () => void;
@@ -29,7 +30,8 @@ export function Lobby({
     return (
       <div className="flex flex-col items-center justify-center min-h-screen">
         <div className="text-2xl mb-4">Connecting to server...</div>
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-100"></div>
+        {/* <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-100"></div> */}
+        <LoadingPong visible={true}/>
       </div>
     );
   }
