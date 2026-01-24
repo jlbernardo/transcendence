@@ -2,14 +2,13 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import PersonalStats from "@/components/PersonalStats";
-import GeneralStats from "@/components/GeneralStats";
 import FriendSection from "@/components/FriendSection";
 import Header from "@/components/Header";
 import { LoadingPong } from "@/components/LoadingPong";
 import { getFriendsList, getPendingRequestsList } from "@/services/friendship";
 import { useEffect, useState } from "react";
 import { User, FriendRequest } from "@/types/user";
+import StatsBox from "@/components/StatsBox";
 
 export default function Home() {
   const [friends, setFriends] = useState<User[]>()
@@ -41,11 +40,21 @@ export default function Home() {
         <Header />
         <div className="row-span-23 row-start-3 col-span-10 grid grid-cols-subgrid gap-2">
           <div className="row-span-8 col-span-5 mt-1 ml-2">
-            <PersonalStats />
+            <StatsBox title="My stats" stats={[
+              { label: "Wins", value: 12 },
+              { label: "Losses", value: 4 },
+              { label: "Win rate", value: "75%" },
+              { label: "Total games", value: 16 },
+            ]} />
           </div>
 
           <div className="row-span-8 col-span-5 mt-1">
-            <GeneralStats />
+            <StatsBox title="General stats" stats={[
+              { label: "Total Games", value: 320 },
+              { label: "Total Players", value: 145 },
+              { label: "Games Today", value: 27 },
+              { label: "Most Wins (Player)", value: "beyoncé" },
+            ]} />
           </div>
 
           <Link href="/chat" className="row-span-1 row-start-10 col-span-2">

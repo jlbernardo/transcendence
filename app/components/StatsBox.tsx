@@ -3,17 +3,15 @@ type Stat = {
   value: string | number
 }
 
-const stats: Stat[] = [
-  { label: "Total Games", value: 320 },
-  { label: "Total Players", value: 145 },
-  { label: "Games Today", value: 27 },
-  { label: "Most Wins (Player)", value: "beyoncé" },
-]
+interface StatsBoxProps {
+  title: string
+  stats: Stat[]
+}
 
-export default function GeneralStats() {
+export default function StatsBox({title, stats}: StatsBoxProps) {
   return (
     <div className="w-full h-full border-4 border-black bg-black/70">
-      <p className="text-amber-200 text-4xl text-center mt-8 mb-6">General stats</p>
+      <p className="text-amber-200 text-4xl text-center mt-8 mb-6">{title}</p>
       <div className="flex flex-col items-center w-full">
         {stats.map((stat) => (
           <div
