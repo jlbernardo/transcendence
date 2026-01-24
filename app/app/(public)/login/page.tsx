@@ -8,12 +8,16 @@ import { useRouter } from "next/navigation";
 import { useUserStore } from "@/store/userStore";
 import { useState } from "react";
 import { LoadingPong } from "@/components/LoadingPong";
+import { Modal } from "@/components/Modal";
+import { Button } from "@headlessui/react";
 
 export default function Login() {
   const router = useRouter()
   const setProfile = useUserStore((state) => state.setProfile);
   const setToken = useUserStore((state) => state.setToken);
   const [isLoading, setIsLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [message, setMessage] = useState<string>("");
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -34,11 +38,11 @@ export default function Login() {
       const profile_response = await getProfile();
       console.log("Profile response:", profile_response);
       setProfile(profile_response);
-
       router.push('/home');
     } catch (error: any) {
       console.error("ERROR: ", error);
-      alert("Login failed! Check console for details.");
+      setIsModalOpen(true);
+      setMessage("Login failed! Check console for details.");
     } finally {
       setIsLoading(false);
     }
@@ -75,11 +79,20 @@ export default function Login() {
             <Link href="/register">Register</Link>
           </p>
           <p className="text-amber-200 text-center">
-            <Link href="/redefine">Forgot your password?</Link>
+            <Button 
+            onClick={() => {setIsModalOpen(true); setMessage("Password reset feature coming soon!")}}
+            className="cursor-pointer">
+              Forgot your password?
+            </Button>
           </p>
         </div>
 			</div>
       <LoadingPong visible={isLoading} />
+      <Modal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}>
+        <p className="text-black">{message}</p>
+      </Modal>
 		</>
 	)
 }

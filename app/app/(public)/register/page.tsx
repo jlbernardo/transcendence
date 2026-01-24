@@ -6,10 +6,13 @@ import { register } from "@/services/authentication";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { LoadingPong } from "@/components/LoadingPong";
+import { Modal } from "@/components/Modal";
 
 export default function Login() {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [message, setMessage] = useState<string>("");
 
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -28,8 +31,9 @@ export default function Login() {
             console.log("Full response:", response);
             router.push('/login');
         } catch (error: any) {
-            console.error("ERROR:");
-            alert("Registration failed! Check console for details.");
+            console.error("ERROR: ", error);
+            setIsModalOpen(true);
+            setMessage("Registration failed! Check console for details.");
         } finally {
             setIsLoading(false);
         }
@@ -80,6 +84,11 @@ export default function Login() {
                 </div>
             </div>
             <LoadingPong visible={isLoading} />
+            <Modal
+            open={isModalOpen}
+            onClose={() => setIsModalOpen(false)}>
+            <p className="text-black">{message}</p>
+            </Modal>
         </>
     )
 }
