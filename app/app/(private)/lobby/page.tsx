@@ -1,6 +1,6 @@
-import Link from "next/dist/client/link";
+import Link from "next/link";
 
-export default function Tournament() {
+export default function Lobby() {
 	return (
         <div className="min-h-screen flex flex-col items-center justify-center">
             <div className="text-center">
