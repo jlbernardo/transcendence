@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import Dropdown from "@/components/Dropdown";
+import Marquee from "react-fast-marquee";
 
 const mockNews = [
   "Welcome to Transcendence! Stay tuned for upcoming features.",
@@ -21,8 +22,9 @@ export default function Header() {
         <br />
       </div>
       <div className="row-span-1 pl-3 pt-4 pb-13 col-span-10">
-        {/* @ts-expect-error: marquee */}
-        <marquee className="pt-2 text-white">{mockNews.join("   ***   ")}</marquee>
+        <Marquee className="pt-2 text-white">
+          {mockNews.join("   ***   ")}
+        </Marquee>
       </div>
       <div className="row-span-1 col-span-1 mt-4 flex justify-end mr-8 ml-18 text-white">
         <Dropdown />
