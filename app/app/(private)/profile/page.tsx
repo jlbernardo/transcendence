@@ -1,13 +1,43 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from "next/link";
 import Image from "next/image";
 import Dropdown from "@/components/Dropdown";
+import { useUserStore } from '@/store/userStore';
+import { getFriendsList } from '@/services/friendship';
+import { putProfile } from '@/services/profile';
 
 const ProfileCard = () => {
-  const [aboutMe, setAboutMe] = useState("Just a cat playing games...");
+  const profile = useUserStore((state) => state.profile);
+  const setProfile = useUserStore((state) => state.setProfile);
+  const [aboutMe, setAboutMe] = useState(profile?.bio);
   const [isEditing, setIsEditing] = useState(false);
+  const [friendsCount, setFriendsCount] = useState(0);
+
+  useEffect(() => {
+    const loadFriends = async () => {
+      try {
+        const response = await getFriendsList();
+        setFriendsCount(response.data?.length || 0);
+      } catch (error) {
+        console.error('Erro ao carregar amigos:', error);
+        setFriendsCount(0);
+      }
+    };
+    loadFriends();
+  }, []);
+
+  const handleSaveBio = async () => {
+    try {
+      const updatedProfile = await putProfile({ bio: aboutMe });
+      setProfile(updatedProfile);
+      setIsEditing(false);
+    } catch (error) {
+      console.error('Erro ao atualizar bio:', error);
+      setAboutMe(profile?.bio);
+    }
+  };
 
   return (
     <div className=" items-center justify-center">      
@@ -46,7 +76,7 @@ const ProfileCard = () => {
             </div>
 
             <div className="flex-1 min-w-[200px]">
-              <h2 className="text-4xl font-bold mb-2 tracking-tight text-[#5d1a1a]">User42</h2>
+              <h2 className="text-4xl font-bold mb-2 tracking-tight text-[#5d1a1a]">{profile?.user.username}</h2>
               
               {/* About Me Editável - Estilo Botão/Caixa */}
               <div 
@@ -55,13 +85,31 @@ const ProfileCard = () => {
               >
                 <p className="text-[10px] uppercase mb-1 opacity-60">About Me:</p>
                 {isEditing ? (
-                  <textarea 
-                    autoFocus
-                    className="w-full bg-transparent border-none outline-none text-sm resize-none p-0 h-full font-bold"
-                    value={aboutMe}
-                    onChange={(e) => setAboutMe(e.target.value)}
-                    onBlur={() => setIsEditing(false)}
-                  />
+                  <div>
+                    <textarea 
+                      autoFocus
+                      className="w-full bg-transparent border-none outline-none text-sm resize-none p-0 h-full font-bold"
+                      value={aboutMe}
+                      onChange={(e) => setAboutMe(e.target.value)}
+                    />
+                    <div className="flex gap-2 mt-2">
+                      <button 
+                        onClick={handleSaveBio}
+                        className="cursor-pointer bg-[#5d1a1a] text-[#fbb034] px-2 py-1 rounded text-xs font-bold hover:bg-[#3a0f0f]"
+                      >
+                        Save
+                      </button>
+                      <button 
+                        onClick={() => {
+                          setAboutMe(profile?.bio);
+                          setIsEditing(false);
+                        }}
+                        className="cursor-pointer bg-gray-500 text-white px-2 py-1 rounded text-xs font-bold hover:bg-gray-600"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
                 ) : (
                   <p className="text-sm italic">"{aboutMe}"</p>
                 )}
@@ -74,15 +122,14 @@ const ProfileCard = () => {
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-2xl">👥</span>
-                  <span className="text-xl font-bold uppercase tracking-tighter">Friends 0</span>
+                  <span className="text-xl font-bold uppercase tracking-tighter">Friends {friendsCount}</span>
                 </div>
               </div>
             </div>
           </div>
 
           <div className="flex justify-between items-end mb-2">
-            <p className="text-xl font-bold italic">Status: <span className="text-teal-700 font-black">online</span></p>
-            <h3 className="text-3xl font-bold uppercase tracking-tighter">Stats</h3>
+            <p className="text-xl font-bold italic">Status: <span className="text-teal-700 font-black">{profile?.user.is_online ? 'Online' : 'Offline'}</span></p>
           </div>
 
           {/* Tabela de Rankings - Limpa e Espaçada */}
