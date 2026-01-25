@@ -35,40 +35,50 @@
 - **Description:** Returns authenticated user profile
 - **Parameters:** None
 - **Return:** JSON with:
-  - `id` (integer)
-  - `user` (object with id, email, username, created_at, is_online)
-  - `bio` (string)
+  - `success` (boolean)
+  - `message` (string)
+  - `data` (object with id, user, bio, avatar)
+- **Status Codes:** 200 OK, 401 Unauthorized
 - **Authentication:** Token required
 
 ## PUT /api/profile/
 - **Description:** Updates authenticated user profile
 - **Parameters:** JSON with:
   - `bio` (string, optional)
-- **Return:** JSON with:
-  - `id` (integer)
-  - `user` (object with id, email, username, created_at, is_online)
-  - `bio` (string)
+- **Return (Success):** JSON with:
+  - `success` (boolean, true)
+  - `message` (string)
+  - `data` (object with id, user, bio, avatar)
+- **Return (Error):** JSON with:
+  - `success` (boolean, false)
+  - `message` (string)
+  - `error` (object with validation errors)
+- **Status Codes:** 200 OK, 400 Bad Request, 401 Unauthorized
 - **Authentication:** Token required
 
 ## PUT /api/profile/avatar/
 - **Description:** Updates image file for authenticated user profile
 - **Parameters:** multipart/form-data with:
   - `avatar` (image file, required)
-- **Return:** JSON with:
-  - `id` (integer)
-  - `user` (object with id, email, username, created_at, is_online)
-  - `bio` (string)
-  - `avatar` (string, URL)
+- **Return (Success):** JSON with:
+  - `success` (boolean, true)
+  - `message` (string)
+  - `data` (object with id, user, bio, avatar)
+- **Return (Error):** JSON with:
+  - `success` (boolean, false)
+  - `message` (string)
+  - `error` (object with validation errors or error message)
+- **Status Codes:** 200 OK, 400 Bad Request, 401 Unauthorized
 - **Authentication:** Token required
 
 ## DELETE /api/profile/avatar/
 - **Description:** Deletes image file for authenticated user profile
 - **Parameters:** None
 - **Return:** JSON with:
-  - `id` (integer)
-  - `user` (object with id, email, username, created_at, is_online)
-  - `bio` (string)
-  - `avatar` (string, URL)
+  - `success` (boolean, true)
+  - `message` (string)
+  - `data` (object with id, user, bio, avatar set to default)
+- **Status Codes:** 200 OK, 401 Unauthorized
 - **Authentication:** Token required
 
 ## POST /api/friends/request/

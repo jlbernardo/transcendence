@@ -21,14 +21,35 @@ def profile(request):
     profile = get_user_profile(request.user)
     if request.method == 'GET':
         serializer = ProfileSerializer(profile)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(
+            {
+                'success': True,
+                'message': 'Perfil obtido com sucesso!',
+                'data': serializer.data
+            },
+            status=status.HTTP_200_OK
+        )
     
     elif request.method == 'PUT':
         serializer = ProfileSerializer(profile, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {
+                    'success': True,
+                    'message': 'Perfil atualizado com sucesso!',
+                    'data': serializer.data
+                },
+                status=status.HTTP_200_OK
+            )
+        return Response(
+            {
+                'success': False,
+                'message': 'Erro ao atualizar perfil.',
+                'error': serializer.errors
+            },
+            status=status.HTTP_400_BAD_REQUEST
+        )
 
 @extend_schema(
     request={'multipart/form-data': {'type': 'object', 'properties': {'avatar': {'type': 'string', 'format': 'binary'}}}},
@@ -45,19 +66,37 @@ def avatar(request):
     if request.method == 'PUT':
         if 'avatar' not in request.FILES:
             return Response(
-                {'error': 'No avatar file provided.'},
+                {
+                    'success': False,
+                    'message': 'Nenhum arquivo de imagem foi fornecido.',
+                    'error': 'No avatar file provided.'
+                },
                 status=status.HTTP_400_BAD_REQUEST
             )
         
-        if profile.avatar:
+        if profile.avatar and profile.avatar.name != 'avatars/default.png':
             profile.avatar.delete(save=False)
         
         serializer = ProfileSerializer(profile, data={'avatar': request.FILES['avatar']}, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(
+                {
+                    'success': True,
+                    'message': 'Avatar atualizado com sucesso!',
+                    'data': serializer.data
+                },
+                status=status.HTTP_200_OK
+            )
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            {
+                'success': False,
+                'message': 'Erro ao enviar a imagem. Verifique o formato do arquivo.',
+                'error': serializer.errors
+            },
+            status=status.HTTP_400_BAD_REQUEST
+        )
     
     elif request.method == 'DELETE':
         if profile.avatar and profile.avatar.name != 'avatars/default.png':
@@ -67,4 +106,11 @@ def avatar(request):
         profile.save()
 
         serializer = ProfileSerializer(profile)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(
+            {
+                'success': True,
+                'message': 'Avatar deletado com sucesso! Voltando para a imagem padrão.',
+                'data': serializer.data
+            },
+            status=status.HTTP_200_OK
+        )
