@@ -11,12 +11,18 @@ export async function putProfile(data: any) {
     return response.data
 }
 
-export async function putAvatar(data: any) {
-    const response = await api.put<Profile>("/profile/avatar/", data)
-    return response.data
+export async function putAvatar(file: File) {
+    const formData = new FormData()
+    formData.append('avatar', file)
+    const response = await api.put<any>("/profile/avatar/", formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        }
+    })
+    return response.data.data
 }
 
 export async function deleteAvatar() {
-    const response = await api.delete<Profile>("/profile/avatar/")
-    return response.data
+    const response = await api.delete<any>("/profile/avatar/")
+    return response.data.data
 }

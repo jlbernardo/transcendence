@@ -14,7 +14,7 @@ const mockNews = [
 export default function Header() {
   return (
     <>
-      <div className="row-span-1 pl-3 pt-1 pb-13 col-span-1 ">
+      <div className="col-span-1">
         <Link href="/home">
           <Image src="/home.svg" alt="home" className="pt-4 ml-5" width={34} height={34} />
         </Link>
