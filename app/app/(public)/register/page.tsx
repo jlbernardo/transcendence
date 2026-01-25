@@ -37,7 +37,6 @@ export default function Login() {
         const result = schema.safeParse(data);
 
         if (!result.success) {
-            console.log(result.error.flatten().fieldErrors);
             const errors = result.error.flatten().fieldErrors;
 
             const [field, messages] = Object.entries(errors).find(([, v]) => v?.length) ?? [];
@@ -51,12 +50,10 @@ export default function Login() {
         try {
             setIsLoading(true);
             const response = await register(data);
-            console.log("Full response:", response);
             router.push('/login');
-        } catch (error: any) {
-            console.error("ERROR: ", error);
+        } catch (error) {
             setIsModalOpen(true);
-            setMessage("Registration failed! Check console for details.");
+            setMessage("Registration failed! Try again.");
         } finally {
             setIsLoading(false);
         }

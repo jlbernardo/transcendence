@@ -37,7 +37,6 @@ export default function Login() {
     const result = schema.safeParse(data);
 
     if (!result.success) {
-      console.log(result.error.flatten().fieldErrors);
       const errors = result.error.flatten().fieldErrors;
 
       const [field, messages] = Object.entries(errors).find(([, v]) => v?.length) ?? [];
@@ -51,12 +50,9 @@ export default function Login() {
     try {
       setIsLoading(true);
       const response = await login(data);
-      console.log("Full response:", response);
-
       setToken(response.token);
 
       const profile_response = await getProfile();
-      console.log("Profile response:", profile_response);
       setProfile(profile_response);
       router.push('/home');
     } catch (error) {
