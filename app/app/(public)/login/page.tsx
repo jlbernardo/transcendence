@@ -10,6 +10,8 @@ import { useState } from "react";
 import { LoadingPong } from "@/components/LoadingPong";
 import { Modal } from "@/components/Modal";
 import { Button } from "@headlessui/react";
+import z from "zod"
+import axios from "axios"
 
 export default function Login() {
   const router = useRouter()
@@ -18,6 +20,10 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [message, setMessage] = useState<string>("");
+  const schema = z.object({
+    email: z.email(),
+    password: z.string().nonempty("Password is required"),
+  })
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -27,6 +33,20 @@ export default function Login() {
       email: formData.get('email') as string,
       password: formData.get('password') as string,
     };
+
+    const result = schema.safeParse(data);
+
+    if (!result.success) {
+      console.log(result.error.flatten().fieldErrors);
+      const errors = result.error.flatten().fieldErrors;
+
+      const [field, messages] = Object.entries(errors).find(([, v]) => v?.length) ?? [];
+      const firstError = messages?.[0];
+
+      setMessage(`Invalid ${field}: ${firstError}`);
+      setIsModalOpen(true);
+      return;
+    }
 
     try {
       setIsLoading(true);
@@ -39,10 +59,18 @@ export default function Login() {
       console.log("Profile response:", profile_response);
       setProfile(profile_response);
       router.push('/home');
-    } catch (error: any) {
-      console.error("ERROR: ", error);
+    } catch (error) {
+      let message = "Something went wrong. Try again.";
+
+      if (axios.isAxiosError(error)) {
+        const status = error.response?.status;
+
+        if (status === 400 || status === 401) {
+          message = "Invalid email or password.";
+        }
+      }
       setIsModalOpen(true);
-      setMessage("Login failed! Check console for details.");
+      setMessage(message);
     } finally {
       setIsLoading(false);
     }
