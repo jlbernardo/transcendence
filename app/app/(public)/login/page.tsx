@@ -8,12 +8,22 @@ import { useRouter } from "next/navigation";
 import { useUserStore } from "@/store/userStore";
 import { useState } from "react";
 import { LoadingPong } from "@/components/LoadingPong";
+import { Modal } from "@/components/Modal";
+import { Button } from "@headlessui/react";
+import z from "zod"
+import axios from "axios"
 
 export default function Login() {
   const router = useRouter()
   const setProfile = useUserStore((state) => state.setProfile);
   const setToken = useUserStore((state) => state.setToken);
   const [isLoading, setIsLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [message, setMessage] = useState<string>("");
+  const schema = z.object({
+    email: z.email(),
+    password: z.string().nonempty("Password is required"),
+  })
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -24,21 +34,39 @@ export default function Login() {
       password: formData.get('password') as string,
     };
 
+    const result = schema.safeParse(data);
+
+    if (!result.success) {
+      const errors = result.error.flatten().fieldErrors;
+
+      const [field, messages] = Object.entries(errors).find(([, v]) => v?.length) ?? [];
+      const firstError = messages?.[0];
+
+      setMessage(`Invalid ${field}: ${firstError}`);
+      setIsModalOpen(true);
+      return;
+    }
+
     try {
       setIsLoading(true);
       const response = await login(data);
-      console.log("Full response:", response);
-
       setToken(response.token);
 
       const profile_response = await getProfile();
-      console.log("Profile response:", profile_response);
       setProfile(profile_response);
-
       router.push('/home');
-    } catch (error: any) {
-      console.error("ERROR: ", error);
-      alert("Login failed! Check console for details.");
+    } catch (error) {
+      let message = "Something went wrong. Try again.";
+
+      if (axios.isAxiosError(error)) {
+        const status = error.response?.status;
+
+        if (status === 400 || status === 401) {
+          message = "Invalid email or password.";
+        }
+      }
+      setIsModalOpen(true);
+      setMessage(message);
     } finally {
       setIsLoading(false);
     }
@@ -75,11 +103,20 @@ export default function Login() {
             <Link href="/register">Register</Link>
           </p>
           <p className="text-amber-200 text-center">
-            <Link href="/redefine">Forgot your password?</Link>
+            <Button 
+            onClick={() => {setIsModalOpen(true); setMessage("Password reset feature coming soon!")}}
+            className="cursor-pointer">
+              Forgot your password?
+            </Button>
           </p>
         </div>
 			</div>
       <LoadingPong visible={isLoading} />
+      <Modal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}>
+        <p className="text-black">{message}</p>
+      </Modal>
 		</>
 	)
 }

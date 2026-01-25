@@ -6,10 +6,23 @@ import { register } from "@/services/authentication";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { LoadingPong } from "@/components/LoadingPong";
+import { Modal } from "@/components/Modal";
+import * as z from "zod";
 
 export default function Login() {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [message, setMessage] = useState<string>("");
+    const schema = z.object({
+        email: z.email(),
+        username: z.string().min(4).max(20),
+        password: z.string().min(8).max(100).regex(/[A-Za-z]/, "Must contain at least one letter"),
+        password2: z.string(),
+    }).refine((data) => data.password === data.password2, {
+        message: "Passwords do not match",
+        path: ["password2"],
+    });
 
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -21,15 +34,26 @@ export default function Login() {
             password: formData.get('password') as string,
             password2: formData.get('password2') as string,
         };
+        const result = schema.safeParse(data);
+
+        if (!result.success) {
+            const errors = result.error.flatten().fieldErrors;
+
+            const [field, messages] = Object.entries(errors).find(([, v]) => v?.length) ?? [];
+            const firstError = messages?.[0];
+
+            setMessage(`Invalid ${field}: ${firstError}`);
+            setIsModalOpen(true);
+            return;
+        }
         
         try {
             setIsLoading(true);
             const response = await register(data);
-            console.log("Full response:", response);
             router.push('/login');
-        } catch (error: any) {
-            console.error("ERROR:");
-            alert("Registration failed! Check console for details.");
+        } catch (error) {
+            setIsModalOpen(true);
+            setMessage("Registration failed! Try again.");
         } finally {
             setIsLoading(false);
         }
@@ -69,7 +93,7 @@ export default function Login() {
                         />
                         <button
                             type="submit"
-                            className="bg-amber-700 w-1/3 mt-4 self-center text-amber-200 p-2 border-2 border-black hover:bg-amber-800"
+                            className="bg-amber-700 w-1/3 my-4 self-center text-amber-200 p-2 border-2 border-black hover:bg-amber-800"
                         >
                             Register
                         </button>
@@ -80,6 +104,11 @@ export default function Login() {
                 </div>
             </div>
             <LoadingPong visible={isLoading} />
+            <Modal
+            open={isModalOpen}
+            onClose={() => setIsModalOpen(false)}>
+            <p className="text-black">{message}</p>
+            </Modal>
         </>
     )
 }
