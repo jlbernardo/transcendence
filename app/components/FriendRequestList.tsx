@@ -26,7 +26,7 @@ export default function FriendRequestList({ requests, onRequestHandled }: Props)
         <div>
             {requests.map(request => (
                 <div key={request.id} className="flex">
-                <p className="ml-3 text-gray-300">{request.from_user.username}</p>
+                <p className="ml-3 text-gray-300">{request.from_user.user.username}</p>
                 <div className="ml-auto flex gap-2 pr-3">
                     <button 
                     onClick={() => handleRequest(request.id, true)}

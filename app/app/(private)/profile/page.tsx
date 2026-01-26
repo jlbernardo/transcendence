@@ -2,9 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from "next/link";
-import Image from "next/image";
 import Header from "@/components/Header";
-import Dropdown from "@/components/Dropdown";
 import { useUserStore } from '@/store/userStore';
 import { getFriendsList } from '@/services/friendship';
 import { putProfile, putAvatar, deleteAvatar } from '@/services/profile';
@@ -125,7 +123,7 @@ const ProfileCard = () => {
             <div className="flex-1 min-w-[200px]">
               <h2 className="text-4xl font-bold mb-2 tracking-tight text-[#5d1a1a]">{profile?.user.username}</h2>
               
-              {/* About Me Editável - Estilo Botão/Caixa */}
+              {/* About Me Editável */}
               <div 
                 className="bg-[#fbb034] border-4 border-[#5d1a1a] px-4 py-2 font-bold shadow-[4px_4px_0px_0px_#5d1a1a] cursor-pointer hover:bg-[#ffc25c] transition-all min-h-[60px]"
                 onClick={() => !isEditing && setIsEditing(true)}
@@ -179,7 +177,7 @@ const ProfileCard = () => {
             <p className="text-xl font-bold italic">Status: <span className="text-teal-700 font-black">{profile?.user.is_online ? 'Online' : 'Offline'}</span></p>
           </div>
 
-          {/* Tabela de Rankings - Limpa e Espaçada */}
+          {/* Tabela de Rankings */}
           <div className="border-4 border-[#5d1a1a] bg-[#fbb034]">
             <table className="w-full text-left border-collapse">
               <thead>

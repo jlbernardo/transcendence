@@ -37,7 +37,7 @@ export interface FriendListResponse {
   success: boolean;
   message: string;
   error: string;
-  data?: User[];
+  data?: Profile[];
 }
 
 export interface FriendsResponse {
@@ -49,8 +49,8 @@ export interface FriendsResponse {
 
 export interface FriendRequest {
   id: number;
-  from_user: User;
-  to_user: User;
+  from_user: Profile;
+  to_user: Profile;
   accepted: boolean;
   created_at: string;
 }
