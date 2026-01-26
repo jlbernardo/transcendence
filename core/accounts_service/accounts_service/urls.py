@@ -37,6 +37,7 @@ urlpatterns = [
     # profile
     path('api/profile/', profile.profile, name='profile'),
     path('api/profile/avatar/', profile.avatar, name='avatar'),
+    path('api/profile/all/', profile.get_all_active_users, name='get_all_active_users'),
 
     # friends
     path('api/friends/request/', friendship.send_friend_request, name='send_friend_request'),

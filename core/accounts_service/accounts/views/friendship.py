@@ -1,7 +1,6 @@
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from drf_spectacular.utils import extend_schema
 
@@ -11,9 +10,8 @@ from ..serializers.friendship import (
     AcceptFriendRequestSerializer,
     FriendRequestSerializer
 )
-from ..serializers.auth import UserSerializer
-
-User = get_user_model()
+from ..serializers.profile import ProfileSerializer
+from ..models.profile import Profile
 
 @extend_schema(
     request=SendFriendRequestSerializer,
@@ -24,7 +22,7 @@ def send_friend_request(request):
     serializer = SendFriendRequestSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
 
-    from_user = request.user
+    from_user = request.user.profile
     to_user_id = serializer.validated_data['to_user_id']
 
     if from_user.id == to_user_id:
@@ -35,7 +33,7 @@ def send_friend_request(request):
             status=status.HTTP_400_BAD_REQUEST
         )
 
-    to_user = get_object_or_404(User, id=to_user_id)
+    to_user = get_object_or_404(Profile, id=to_user_id)
 
     sent_exists = from_user.sent_friend_requests.filter(to_user=to_user).exists()
     received_exists = from_user.received_friend_requests.filter(from_user=to_user).exists()
@@ -75,7 +73,7 @@ def accept_friend_request(request):
         id=serializer.validated_data['request_id']
     )
 
-    if friend_request.to_user != request.user:
+    if friend_request.to_user != request.user.profile:
         return Response({
             'success': False,
             'message': 'You cannot accept this request.',
@@ -110,7 +108,7 @@ def list_pending_requests(request):
     Returns all pending friend requests received by the authenticated user.
     """
     pending_requests = FriendRequest.objects.filter(
-        to_user=request.user,
+        to_user=request.user.profile,
         accepted=False
     )
 
@@ -122,14 +120,14 @@ def list_pending_requests(request):
     )
 
 @extend_schema(
-    responses={200: UserSerializer(many=True)}
+    responses={200: ProfileSerializer(many=True)}
 )
 @api_view(['GET'])
 def list_friends(request):
-    user = request.user
+    profile = request.user.profile
 
-    sent_accepted = user.sent_friend_requests.filter(accepted=True)
-    received_accepted = user.received_friend_requests.filter(accepted=True)
+    sent_accepted = profile.sent_friend_requests.filter(accepted=True)
+    received_accepted = profile.received_friend_requests.filter(accepted=True)
 
     friends = []
     friends.extend([fr.to_user for fr in sent_accepted])
@@ -138,7 +136,7 @@ def list_friends(request):
     return Response({
         'success': True,
         'message': 'Friends list retrieved successfully.',
-        'data': UserSerializer(friends, many=True).data},
+        'data': ProfileSerializer(friends, many=True).data},
         status=status.HTTP_200_OK
     )
 
@@ -150,7 +148,7 @@ def reject_friend_request(request, request_id):
         id=request_id,
     )
 
-    if friend_request.to_user != request.user:
+    if friend_request.to_user != request.user.profile:
         return Response({
             'success': False,
             'message': 'You cannot reject this request.',

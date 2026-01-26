@@ -1,13 +1,11 @@
 from rest_framework import serializers
-from django.contrib.auth import get_user_model
 from accounts.models.friendship import FriendRequest
-from accounts.serializers.auth import UserSerializer
-
-User = get_user_model()
+from accounts.serializers.profile import ProfileSerializer
+from accounts.models.profile import Profile
 
 class FriendRequestSerializer(serializers.ModelSerializer):
-    from_user = UserSerializer(read_only=True)
-    to_user = UserSerializer(read_only=True)
+    from_user = ProfileSerializer(read_only=True)
+    to_user = ProfileSerializer(read_only=True)
     
     class Meta:
         model = FriendRequest
@@ -20,8 +18,8 @@ class SendFriendRequestSerializer(serializers.Serializer):
 
     def validate_to_user_id(self, value):
         try:
-            User.objects.get(id=value)
-        except User.DoesNotExist:
+            Profile.objects.get(id=value)
+        except Profile.DoesNotExist:
             raise serializers.ValidationError('User not found.')
         return value
 
