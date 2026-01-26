@@ -3,6 +3,7 @@
 
 # Node.js
 **/node_modules/
+/core/game_service/node_modules/
 
 # Build outputs
 **/dist/
