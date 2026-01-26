@@ -49,7 +49,7 @@ def avatar(request):
                 status=status.HTTP_400_BAD_REQUEST
             )
         
-        if profile.avatar:
+        if profile.avatar and profile.avatar.name != 'avatars/default.png':
             profile.avatar.delete(save=False)
         
         serializer = ProfileSerializer(profile, data={'avatar': request.FILES['avatar']}, partial=True)
