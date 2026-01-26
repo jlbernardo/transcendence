@@ -49,7 +49,7 @@ def avatar(request):
                 status=status.HTTP_400_BAD_REQUEST
             )
         
-        if profile.avatar:
+        if profile.avatar and profile.avatar.name != 'avatars/default.png':
             profile.avatar.delete(save=False)
         
         serializer = ProfileSerializer(profile, data={'avatar': request.FILES['avatar']}, partial=True)
@@ -68,3 +68,19 @@ def avatar(request):
 
         serializer = ProfileSerializer(profile)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+@extend_schema(
+    responses={200: ProfileSerializer(many=True)}
+)
+@api_view(['GET'])
+def get_all_active_users(request):
+    """
+    Returns all active users' profiles except the authenticated user's profile.
+    """
+    profiles = Profile.objects.filter(user__is_active=True).exclude(user=request.user)
+
+    return Response({
+        'success': True,
+        'message': 'Active users retrieved successfully.',
+        'data': ProfileSerializer(profiles, many=True).data
+    }, status=status.HTTP_200_OK)

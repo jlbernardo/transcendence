@@ -1,20 +1,21 @@
 from django.db import models
-from django.conf import settings
+from accounts.models.profile import Profile
 
 class FriendRequest(models.Model):
     """
     Friend request model.
     """
     from_user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+        Profile,
         on_delete=models.CASCADE,
         related_name='sent_friend_requests'
     )
     to_user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+        Profile,
         on_delete=models.CASCADE,
         related_name='received_friend_requests'
     )
+    
     accepted = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 

@@ -19,9 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${pixel.className} antialiased text-lg`}
-      >
+      <body className={`${pixel.className} antialiased text-lg`}>
         {children}
         <Footer />
       </body>

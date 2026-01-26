@@ -76,11 +76,15 @@
 - **Parameters (body JSON):**
   - `to_user_id` (integer, required)
 - **Return:** JSON with:
-  - `id` (integer)
-  - `from_user` (integer, user ID)
-  - `to_user` (integer, user ID)
-  - `accepted` (boolean)
-  - `created_at` (string, timestamp)
+  - `data` (object):
+    - `id` (integer)
+    - `from_user` (integer, user ID)
+    - `to_user` (integer, user ID)
+    - `accepted` (boolean)
+    - `created_at` (string, timestamp)
+  - `success` (boolean)
+  - `error` (string)
+  - `message` (string)
 - **Authentication:** Token required
 
 ## POST /api/friends/accept/
@@ -88,31 +92,59 @@
 - **Parameters (body JSON):**
   - `request_id` (integer, required)
 - **Return:** JSON with:
-  - `id` (integer)
-  - `from_user` (integer, user ID)
-  - `to_user` (integer, user ID)
-  - `accepted` (boolean)
-  - `created_at` (string, timestamp)
+  - `data` (object):
+    - `id` (integer)
+    - `from_user` (integer, user ID)
+    - `to_user` (integer, user ID)
+    - `accepted` (boolean)
+    - `created_at` (string, timestamp)
+  - `success` (boolean)
+  - `error` (string)
+  - `message` (string)
 - **Authentication:** Token required
 
 ## GET /api/friends/pending/
 - **Description:** Returns all pending friend requests received by the authenticated user
 - **Parameters:** None
 - **Return:** JSON array with friend request objects containing:
-  - `id` (integer)
-  - `from_user` (object with user details)
-  - `to_user` (object with user details)
-  - `accepted` (boolean)
-  - `created_at` (string, timestamp)
+  - `data` (object):
+    - `id` (integer)
+    - `from_user` (integer, user ID)
+    - `to_user` (integer, user ID)
+    - `accepted` (boolean)
+    - `created_at` (string, timestamp)
+  - `success` (boolean)
+  - `error` (string)
+  - `message` (string)
 - **Authentication:** Token required
 
 ## GET /api/friends/
 - **Description:** Returns list of authenticated user's friends
 - **Parameters:** None
 - **Return:** JSON array with user objects containing:
-  - `id` (integer)
-  - `email` (string)
-  - `username` (string)
-  - `created_at` (string, timestamp)
-  - `is_online` (boolean)
+  - `data` (object):
+    - `id` (integer)
+    - `from_user` (integer, user ID)
+    - `to_user` (integer, user ID)
+    - `accepted` (boolean)
+    - `created_at` (string, timestamp)
+  - `success` (boolean)
+  - `error` (string)
+  - `message` (string)
+- **Authentication:** Token required
+
+## DELETE /api/friends/reject/{request_id}/
+- **Description:** Rejects (deletes) a pending friend request received by the authenticated user
+- **Parameters (URL path):**
+  - `request_id` (integer, required)
+- **Return:** JSON with:
+  - `data` (object):
+    - `id` (integer)
+    - `from_user` (integer, user ID)
+    - `to_user` (integer, user ID)
+    - `accepted` (boolean)
+    - `created_at` (string, timestamp)
+  - `success` (boolean)
+  - `error` (string)
+  - `message` (string)
 - **Authentication:** Token required
