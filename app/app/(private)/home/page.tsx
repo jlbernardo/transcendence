@@ -8,14 +8,14 @@ import { LoadingPong } from "@/components/LoadingPong";
 import { getFriendsList, getPendingRequestsList } from "@/services/friendship";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { User, FriendRequest } from "@/types/user";
+import { Profile, FriendRequest } from "@/types/user";
 import StatsBox from "@/components/StatsBox";
 import { Button } from "@headlessui/react";
 import { Modal } from "@/components/Modal";
 
 export default function Home() {
   const router = useRouter();
-  const [friends, setFriends] = useState<User[]>()
+  const [friends, setFriends] = useState<Profile[]>()
   const [friendRequests, setFriendRequests] = useState<FriendRequest[]>()
   const [isLoading, setIsLoading] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false);
