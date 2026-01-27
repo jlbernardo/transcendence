@@ -26,7 +26,10 @@ SECRET_KEY = 'django-insecure-*%q&#(a)d3m&qffnu+-qm_fhh6-c!n3&6j$#qa-b74q9pmo_dr
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "accounts_service",
+    "nonsilicious-ulteriorly-tu.ngrok-free.dev",
+]
 
 
 # Application definition
@@ -176,6 +179,7 @@ MEDIA_URL = '/images/' # url to see images
 # CORS settings for Next.js dev server
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
+    "https://nonsilicious-ulteriorly-tu.ngrok-free.dev"
 ]
 
 CORS_ALLOW_CREDENTIALS = False

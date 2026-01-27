@@ -41,7 +41,9 @@ services:
     build:
       context: ..
       dockerfile: infra/ngrok.Dockerfile
-    image: ngrok
+      args:
+        - NGROK_CONFIG=infra/accounts_service.yml
+    image: ngrok_accounts_service
     container_name: ngrok_accounts_service
     environment:
       - NGROK_AUTHTOKEN=31ZN8je7Gz1VwB96jp6ljpLfATm_6zfJHDU1miPTNH4AifVnZ

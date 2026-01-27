@@ -8,7 +8,7 @@ ARG NGROK_CONFIG
 ARG NGROK_AUTHTOKEN
 
 # Copiar arquivo de configuração
-COPY --chmod=644 infra/accounts_service.yml /app/ngrok.yml
+COPY --chmod=644 ${NGROK_CONFIG} /app/ngrok.yml
 
 # Replace authtoken placeholder in config
 RUN sed -i "s|\${NGROK_AUTHTOKEN}|${NGROK_AUTHTOKEN}|g" /app/ngrok.yml
