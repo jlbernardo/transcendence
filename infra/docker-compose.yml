@@ -1,19 +1,19 @@
 services:
-  app:
-    build:
-      context: ../app
-      dockerfile: ../infra/app.Dockerfile
-    image: app
-    container_name: app
-    ports:
-      - "3000:3000"
-    environment:
-      - GAME_SERVICE_URL=http://game_service:3002/ws
+  # app:
+  #   build:
+  #     context: ../app
+  #     dockerfile: ../infra/app.Dockerfile
+  #   image: app
+  #   container_name: app
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     - GAME_SERVICE_URL=http://game_service:3002/ws
   
-    depends_on:
-      - accounts_service
-      - game_service
-    restart: always
+  #   depends_on:
+  #     - accounts_service
+  #     # - game_service
+  #   restart: always
 
   accounts_service:
     build:
@@ -27,12 +27,28 @@ services:
       - ../core/accounts_service:/app
     restart: always
 
-  game_service:
+  # game_service:
+  #   build:
+  #     context: ..
+  #     dockerfile: infra/game_service.Dockerfile
+  #   ports:
+  #     - "3002:3002"
+  #   environment:
+  #     - DEBUG=False
+  #   restart: always
+
+  ngrok_accounts_service:
     build:
       context: ..
-      dockerfile: infra/game_service.Dockerfile
-    ports:
-      - "3002:3002"
+      dockerfile: infra/ngrok.Dockerfile
+    image: ngrok
+    container_name: ngrok_accounts_service
     environment:
-      - DEBUG=False
+      - NGROK_AUTHTOKEN=31ZN8je7Gz1VwB96jp6ljpLfATm_6zfJHDU1miPTNH4AifVnZ
+    ports:
+      - "4041:4040"
+    volumes:
+      - ../infra/accounts_service.yml:/app/ngrok.yml:ro
+    depends_on:
+      - accounts_service
     restart: always
