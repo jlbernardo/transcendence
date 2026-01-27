@@ -1,10 +1,12 @@
 import express from 'express';
 import cors from 'cors';
 import { createServer } from 'http';
+import { createServer as httpsCreateServer } from 'https';
 import { WebSocketServer, WebSocket } from 'ws';
 import { GameRoom } from './game/GameRoom.js';
 import { ClientMessage, ServerMessage } from './types/game.js';
 import { register, activeRooms, activeConnections, totalConnections } from './metrics.js';
+import { readFileSync } from 'fs';
 
 const app = express();
 const server = createServer(app);
@@ -85,7 +87,7 @@ function handleCreateRoom(ws: WebSocket): void {
   }
 
   let roomId = generateRoomId();
-  
+
   while (rooms.has(roomId))
     roomId = generateRoomId();
 
@@ -193,14 +195,14 @@ function handleDisconnect(ws: WebSocket): void {
 
     if (room) {
       const allPlayerWs = room.getPlayerWebSockets();
-      
+
       // Notify remaining players before removing
       for (const playerWs of allPlayerWs) {
         if (playerWs !== ws) {
           send(playerWs, { type: 'PLAYER_DISCONNECTED' });
         }
       }
-      
+
       room.removePlayer(ws);
 
       if (room.isEmpty()) {
@@ -240,7 +242,24 @@ app.get('/metrics', async (_req, res) => {
 // Server setup and initialization
 const PORT = process.env.PORT || 3002;
 const HOST = '0.0.0.0';
-server.listen(Number(PORT), HOST, () => {
-  console.log(`Server running on http://${HOST}:${PORT}`);
-  console.log(`WebSocket endpoint: ws://${HOST}:${PORT}/ws`);
-});
+
+if (process.env.USE_HTTPS === 'true') {
+  const httpsServer = httpsCreateServer({
+    // In a real application, use proper SSL certificates
+    key: readFileSync('./config/key.pem'), // Provide your SSL key here
+    cert: readFileSync('./config/cert.pem') // Provide your SSL certificate here
+  }, app);
+
+  httpsServer.listen(Number(PORT), HOST, () => {
+    console.log(`HTTPS Server running on https://${HOST}:${PORT}`);
+    console.log(`WebSocket endpoint: wss://${HOST}:${PORT}/ws`);
+  });
+
+  wss.options.server = httpsServer;
+} else {
+  server.listen(Number(PORT), HOST, () => {
+    console.log(`Server running on http://${HOST}:${PORT}`);
+    console.log(`WebSocket endpoint: ws://${HOST}:${PORT}/ws`);
+  });
+}
+
