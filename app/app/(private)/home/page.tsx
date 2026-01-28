@@ -65,7 +65,7 @@ export default function Home() {
 
           <Button 
             onClick={() => {setIsModalOpen(true); setMessage("Chat feature coming soon!")}}
-            className=" cursor-pointer row-span-1 row-start-10 col-span-2">
+            className=" cursor-pointer row-span-1 row-start-10 col-span-2 mb-12">
             <div className="flex flex-col items-center">
               <Image src="/chat.svg" alt="chat" width={100} height={100} />
               <p className="text-3xl mt-3 text-amber-100">conversations</p>
@@ -74,7 +74,7 @@ export default function Home() {
 
           <Button
             onClick={() => {setIsModalOpen(true); setMessage("Lobby feature coming soon!")}}
-            className="cursor-pointer row-span-1 row-start-10 col-span-2">
+            className="cursor-pointer row-span-1 row-start-10 col-span-2 mb-12">
             <div className="flex flex-col items-center">
               <Image src="/lobby.svg" alt="lobby" width={100} height={100} />
               <p className="text-3xl mt-3 text-amber-100">lobby</p>
@@ -83,7 +83,7 @@ export default function Home() {
 
           <Button
             onClick={() => {router.push('/game')}}
-            className="cursor-pointer row-span-1 row-start-10 col-span-2">
+            className="cursor-pointer row-span-1 row-start-10 col-span-2 mb-12">
             <div className="flex flex-col items-center">
               <Image src="/matchmaking.svg" alt="matchmaking" width={100} height={100} />
               <p className="text-3xl mt-3 text-amber-100">game</p>
@@ -92,7 +92,7 @@ export default function Home() {
 
           <Button
             onClick={() => {setIsModalOpen(true); setMessage("Tournament feature coming soon!")}}
-            className="cursor-pointer row-span-1 row-start-10 col-span-2">
+            className="cursor-pointer row-span-1 row-start-10 col-span-2 mb-12">
             <div className="flex flex-col items-center">
               <Image src="/tournament.svg" alt="tournament" width={100} height={100} />
               <p className="text-3xl mt-3 text-amber-100">tournament</p>
@@ -101,7 +101,7 @@ export default function Home() {
 
           <Button
             onClick={() => {setIsModalOpen(true); setMessage("Find new friends feature coming soon!")}}
-            className="cursor-pointer row-span-1 row-start-10 col-span-2">
+            className="cursor-pointer row-span-1 row-start-10 col-span-2 mb-12">
             <div className="flex flex-col items-center">
               <Image src="/search.svg" alt="find new friends" width={100} height={100} />
               <p className="text-3xl mt-3 text-amber-100">find new friends</p>
