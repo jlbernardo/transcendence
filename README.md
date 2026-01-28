@@ -1,10 +1,10 @@
-# ft_pong
-
 *This project has been created as part of the 42 curriculum by sabrifer, julberna, mgonzaga, namoreir.*
+
+# GIRL PONG
 
 ## Description
 
-**ft_pong** is a modern web-based multiplayer Pong game that recreates the classic arcade experience with real-time online gameplay. The project implements a full-stack web application with user authentication, friend management, and live game sessions between two players.
+**GIRL PONG** is a modern web-based multiplayer Pong game that recreates the classic arcade experience with real-time online gameplay. The project implements a full-stack web application with user authentication, friend management, and live game sessions between two players.
 
 ### Key Features
 

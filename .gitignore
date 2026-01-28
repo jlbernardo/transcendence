@@ -1,3 +1,5 @@
+# Ignore environment variables
+infra/.env
 # Vscode
 .vscode/
 
