@@ -148,6 +148,13 @@ function GameApp({ wsUrl }: { wsUrl: string }) {
       resetGame();
     }, [send, resetGame]);
 
+  const handleLeaveRoom = useCallback(
+    () => {
+      send({ type: "LEAVE_ROOM" });
+      resetGame();
+      window.location.href = "/home";
+    }, [send, resetGame]);
+
   // Renders based on app state
   switch (appState) {
     case "lobby":
@@ -167,6 +174,7 @@ function GameApp({ wsUrl }: { wsUrl: string }) {
           roomId={roomId}
           playerNumber={playerNumber}
           onReady={handleReady}
+          onLeave={handleLeaveRoom}
           opponentJoined={opponentJoined}
           myReady={myReady}
           opponentReady={opponentReady}
