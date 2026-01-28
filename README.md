@@ -80,6 +80,8 @@ The team adopted an agile approach with clear task distribution:
 ### Infrastructure
 - **Docker & Docker Compose**: Containerization and orchestration
 - **Multi-container architecture**: Isolated services for scalability
+- **Ngrok**: HTTPS tunneling for secure development/testing
+- **Environment Variables (.env)**: Secure credential management
 
 ### Technical Justification
 
@@ -348,7 +350,19 @@ Before running the project, ensure you have the following installed:
    cd transcendence
    ```
 
-2. **Build and start all services:**
+2. **Set up environment variables:**
+   
+   Create a `.env` file in the root directory based on `.env.example`:
+   ```bash
+   cp .env.example .env
+   ```
+   
+   Edit the `.env` file with your specific values
+   ```
+   
+   ⚠️ **Important**: Never commit the `.env` file to Git. It's already included in `.gitignore`.
+
+3. **Build and start all services:**
    ```bash
    make
    # or manually:
@@ -360,8 +374,9 @@ Before running the project, ensure you have the following installed:
    - **accounts_service**: Backend API (Django) on `http://localhost:8000`
    - **game_service**: Game WebSocket server on `http://localhost:3002`
 
-3. **Access the application:**
-   - Open your browser and navigate to: `http://localhost:3000`
+4. **Access the application:**
+   - **Local development**: `http://localhost:3000`
+   - **HTTPS via ngrok**: Use your configured ngrok URL
 
 ### Available Make Commands
 
@@ -390,18 +405,58 @@ make up SERVICE=app
 
 ### Environment Configuration
 
-The project uses environment variables defined in the docker-compose.yml:
+The project uses environment variables stored in a `.env` file for security and flexibility. All sensitive credentials, API keys, and configuration values are kept separate from the codebase.
 
-**App Service:**
-- `GAME_SERVICE_URL`: WebSocket URL for game server (default: `http://game_service:3002/ws`)
+#### Required Environment Variables
 
-**Accounts Service:**
-- `DEBUG`: Django debug mode (default: `False` in production)
+**`.env` file structure** (see `.env.example` for template):
 
-**Game Service:**
-- `DEBUG`: Debug logging (default: `False`)
+```bash
+# Django Settings
+DJANGO_SECRET_KEY=your-django-secret-key-here
+DJANGO_DEBUG=True  # Set to False in production
 
-No additional `.env` file is required for basic operation.
+# CORS Configuration
+# Add all allowed origins (comma-separated)
+CORS_ALLOWED_ORIGINS=http://localhost:3000,https://your-ngrok-domain.ngrok.io
+
+# Ngrok Configuration (for HTTPS tunneling)
+NGROK_AUTHTOKEN=your-ngrok-authentication-token
+
+# Database Configuration
+DATABASE_URL=sqlite:///db.sqlite3
+
+# Game Service
+GAME_SERVICE_URL=ws://game_service:3002/ws
+
+# Optional: Production settings
+# ALLOWED_HOSTS=localhost,127.0.0.1,your-domain.com
+```
+
+#### Why We Use `.env`
+
+- **Security**: Keeps sensitive data (tokens, secret keys) out of version control
+- **Flexibility**: Easy to change configurations per environment (dev, staging, prod)
+- **HTTPS Support**: Ngrok token allows secure HTTPS tunneling for development/testing
+- **CORS Management**: Dynamic origin configuration without code changes
+- **Compliance**: Follows security best practices required by the project specifications
+
+#### Getting Your Ngrok Token
+
+1. Sign up at [ngrok.com](https://ngrok.com)
+2. Get your authtoken from the dashboard
+3. Add it to your `.env` file
+
+#### `.env.example` File
+
+The repository includes a `.env.example` file with all required variables (without sensitive values). Use it as a template:
+
+```bash
+cp .env.example .env
+# Then edit .env with your actual values
+```
+
+⚠️ **Security Note**: The `.env` file is included in `.gitignore` and should **never** be committed to Git.
 
 ### API Documentation
 
