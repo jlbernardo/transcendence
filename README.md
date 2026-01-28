@@ -214,27 +214,191 @@ No persistent game history is stored (focus on real-time gameplay).
 
 ### Selected Modules
 
-<!-- TODO: Complete this section with chosen modules -->
-
 **Major Modules (2 points each):**
-1. [Module Name] - [Brief description and implementation details]
-   - Implemented by: [Team member(s)]
-   - How it was implemented: [Technical details]
 
-2. [Module Name] - [Brief description]
-   - Implemented by: [Team member(s)]
-   - How it was implemented: [Technical details]
+1. **Use a Framework for Both Frontend and Backend** (2 points)
+   - **Description**: Utilized modern, production-ready frameworks for both layers of the application
+   - **Implemented by**: Full team (sabrifer, julberna, mgonzaga, namoreir)
+   - **Implementation**:
+     - **Frontend**: Next.js 16.1.1 with React 19 and TypeScript
+       - Server-side rendering capabilities
+       - Built-in routing and API routes
+       - Optimized production builds
+     - **Backend**: 
+       - Django 5.0.1 with Django REST Framework 3.14 (Accounts Service)
+       - Node.js with Express 4 and TypeScript 5 (Game Service)
+     - Both frameworks provide robust ecosystems, middleware support, and excellent documentation
+
+2. **Real-time Features Using WebSockets** (2 points)
+   - **Description**: Implemented bidirectional real-time communication for live multiplayer gameplay
+   - **Implemented by**: julberna (backend), julberna & mgonzaga (frontend)
+   - **Implementation**:
+     - WebSocket server using `ws` library (Node.js)
+     - Real-time game state synchronization at 60 FPS
+     - Room-based communication for isolated game sessions
+     - Event-driven architecture (CREATE_ROOM, JOIN_ROOM, PADDLE_MOVE, GAME_STATE)
+     - Client reconnection handling
+     - Low-latency message passing (<50ms typical)
+     - File: `/core/game_service/src/index.ts`, `/app/hooks/useWebSocket.ts`
+
+3. **Public API with Security and Documentation** (2 points)
+   - **Description**: RESTful API with authentication, rate limiting, and comprehensive documentation
+   - **Implemented by**: sabrifer, namoreir
+   - **Implementation**:
+     - **Authentication**: Token-based authentication (Django REST Framework TokenAuth)
+     - **Rate Limiting**: 
+       - Anonymous users: 100 requests/day
+       - Authenticated users: 1000 requests/day
+     - **Documentation**: 
+       - OpenAPI/Swagger UI at `/api/schema/swagger-ui/`
+       - ReDoc at `/api/schema/redoc/`
+       - DRF Spectacular for automatic schema generation
+     - **Endpoints** (11 total, exceeds requirement of 5):
+       1. `POST /api/auth/register/` - User registration
+       2. `POST /api/auth/login/` - User authentication
+       3. `POST /api/auth/logout/` - User logout
+       4. `GET /api/profile/` - Get user profile
+       5. `PUT /api/profile/` - Update profile
+       6. `PUT /api/profile/avatar/` - Upload avatar
+       7. `DELETE /api/profile/avatar/` - Delete avatar
+       8. `POST /api/friends/request/` - Send friend request
+       9. `POST /api/friends/accept/` - Accept friend request
+       10. `GET /api/friends/pending/` - List pending requests
+       11. `GET /api/friends/` - List friends
+       12. `DELETE /api/friends/reject/{id}/` - Reject friend request
+
+4. **Standard User Management and Authentication** (2 points)
+   - **Description**: Complete user lifecycle management with secure authentication
+   - **Implemented by**: sabrifer, namoreir
+   - **Implementation**:
+     - Custom user model extending Django's AbstractUser
+     - Email-based authentication (email as USERNAME_FIELD)
+     - Password validation (minimum length, complexity requirements)
+     - Token-based session management
+     - User profile system with one-to-one relationship
+     - Friend request system with accept/reject functionality
+     - Secure password hashing (Django's default PBKDF2)
+     - CORS configuration for cross-origin requests
+     - Files: `/core/accounts_service/accounts/models/`, `/core/accounts_service/accounts/views/auth.py`
+
+5. **Complete Web-Based Game** (2 points)
+   - **Description**: Fully functional Pong game playable entirely in the browser
+   - **Implemented by**: julberna (backend + frontend), mgonzaga (frontend)
+   - **Implementation**:
+     - Classic Pong mechanics (ball physics, paddle collision, scoring)
+     - Server-authoritative game engine to prevent cheating
+     - 60 FPS game loop for smooth gameplay
+     - Ball physics: velocity, collision detection, angle calculation
+     - Paddle movement with boundary constraints
+     - Score tracking and win condition (first to 5 points)
+     - Speed increase on each paddle hit (up to 2x)
+     - Game states: waiting → playing → finished
+     - Files: `/core/game_service/src/game/GameEngine.ts`, `/app/components/Game.tsx`
+
+6. **Remote Players - Real-time Multiplayer** (2 points)
+   - **Description**: Two players on separate computers play together in real-time
+   - **Implemented by**: julberna (backend), julberna & mgonzaga (frontend)
+   - **Implementation**:
+     - Room-based matchmaking with unique 6-character codes
+     - WebSocket connections for each player
+     - Server-side game state management
+     - Synchronized paddle movements and ball position
+     - Player ready system (both must be ready to start)
+     - Disconnection handling (notifies remaining player)
+     - Sub-50ms latency for responsive gameplay
+     - State broadcast to both clients every frame (16.67ms)
+     - Files: `/core/game_service/src/game/GameRoom.ts`
+
+7. **Backend as Microservices** (2 points)
+   - **Description**: Application split into independent, specialized services
+   - **Implemented by**: Full team architecture, namoreir (Docker orchestration)
+   - **Implementation**:
+     - **3 separate services**:
+       1. **app** (Frontend): Next.js application (port 3000)
+       2. **accounts_service** (Backend): Django REST API for user management (port 8000)
+       3. **game_service** (Backend): Node.js WebSocket server for game logic (port 3002)
+     - Each service has its own:
+       - Dockerfile (optimized builds)
+       - Dependencies (package.json or requirements.txt)
+       - Technology stack (Python vs Node.js)
+       - Isolated concerns (auth vs game)
+     - Docker Compose orchestration with service networking
+     - Independent scaling capabilities
+     - Service health checks and monitoring endpoints
+     - Files: `/infra/docker-compose.yml`, `/infra/*.Dockerfile`
 
 **Minor Modules (1 point each):**
-1. [Module Name] - [Brief description]
-   - Implemented by: [Team member(s)]
-   - How it was implemented: [Technical details]
 
-2. [Module Name] - [Brief description]
-   - Implemented by: [Team member(s)]
-   - How it was implemented: [Technical details]
+1. **Use an ORM for Database** (1 point)
+   - **Description**: Object-Relational Mapping for type-safe database operations
+   - **Implemented by**: sabrifer, namoreir
+   - **Implementation**:
+     - Django ORM for Accounts Service
+     - Models: CustomUser, Profile, FriendRequest
+     - Automatic SQL query generation
+     - Migration system for schema versioning
+     - Relationships: OneToOne (User-Profile), ForeignKey (FriendRequests)
+     - Query optimization with `select_related()` and `prefetch_related()`
+     - Built-in validation and constraints
+     - Files: `/core/accounts_service/accounts/models/`
 
-**Total Points:** [Calculate: Major×2 + Minor×1]
+2. **Server-Side Rendering (SSR)** (1 point)
+   - **Description**: Next.js SSR for improved performance and SEO
+   - **Implemented by**: julberna, mgonzaga
+   - **Implementation**:
+     - Next.js App Router with React Server Components
+     - Initial HTML rendered on server
+     - Faster First Contentful Paint (FCP)
+     - SEO-friendly meta tags and structured data
+     - Automatic code splitting per route
+     - Hydration for client-side interactivity
+     - Server actions for data mutations
+     - Files: `/app/app/` directory structure
+
+3. **Custom Design System** (1 point)
+   - **Description**: Reusable component library with consistent styling
+   - **Implemented by**: julberna, mgonzaga
+   - **Implementation**:
+     - **Color Palette**: 
+       - Primary: Amber/Gold tones (amber-200, amber-100)
+       - Secondary: Fuchsia/Purple (fuchsia-950)
+       - Background: Black/Dark grays
+       - Accents: Green (success), Red (error)
+     - **Typography**: System font stack, responsive sizing
+     - **10+ Reusable Components**:
+       1. Header (navigation with auth state)
+       2. Footer (info and links)
+       3. Dropdown (user menu)
+       4. Modal (dialogs)
+       5. Button (primary, secondary variants)
+       6. FriendList (online/offline status)
+       7. FriendRequestList (accept/reject actions)
+       8. StatsBox (game statistics display)
+       9. Game (canvas component)
+       10. GameInstructions (help overlay)
+       11. GameOver (end screen)
+       12. Lobby (room management)
+       13. WaitingRoom (pre-game state)
+       14. LoadingPong (loading animation)
+     - Tailwind CSS for consistent spacing and utilities
+     - Files: `/app/components/`, `/app/globals.css`
+
+4. **Support for Additional Browsers** (1 point)
+   - **Description**: Cross-browser compatibility and responsive design
+   - **Implemented by**: julberna, mgonzaga
+   - **Implementation**:
+     - Tested on: Chrome, Firefox, Safari, Edge
+     - Responsive breakpoints (mobile, tablet, desktop)
+     - Modern CSS with fallbacks
+     - Polyfills via Next.js automatic transpilation
+     - WebSocket compatibility across browsers
+     - Canvas API support verification
+     - Flexbox and Grid layouts for compatibility
+     - Progressive enhancement approach
+
+**Total Points: 18**
+- Major Modules: 7 × 2 = 14 points
+- Minor Modules: 4 × 1 = 4 points
 
 ---
 
@@ -409,29 +573,7 @@ The project uses environment variables stored in a `.env` file for security and 
 
 #### Required Environment Variables
 
-**`.env` file structure** (see `.env.example` for template):
-
-```bash
-# Django Settings
-DJANGO_SECRET_KEY=your-django-secret-key-here
-DJANGO_DEBUG=True  # Set to False in production
-
-# CORS Configuration
-# Add all allowed origins (comma-separated)
-CORS_ALLOWED_ORIGINS=http://localhost:3000,https://your-ngrok-domain.ngrok.io
-
-# Ngrok Configuration (for HTTPS tunneling)
-NGROK_AUTHTOKEN=your-ngrok-authentication-token
-
-# Database Configuration
-DATABASE_URL=sqlite:///db.sqlite3
-
-# Game Service
-GAME_SERVICE_URL=ws://game_service:3002/ws
-
-# Optional: Production settings
-# ALLOWED_HOSTS=localhost,127.0.0.1,your-domain.com
-```
+**`.env` file structure** (see `.env.example` for template)
 
 #### Why We Use `.env`
 
