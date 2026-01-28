@@ -1,0 +1,172 @@
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from django.shortcuts import get_object_or_404
+from drf_spectacular.utils import extend_schema
+
+from ..models.friendship import FriendRequest
+from ..serializers.friendship import (
+    SendFriendRequestSerializer,
+    AcceptFriendRequestSerializer,
+    FriendRequestSerializer
+)
+from ..serializers.profile import ProfileSerializer
+from ..models.profile import Profile
+
+@extend_schema(
+    request=SendFriendRequestSerializer,
+    responses={201: FriendRequestSerializer}
+)
+@api_view(['POST'])
+def send_friend_request(request):
+    serializer = SendFriendRequestSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+
+    from_user = request.user.profile
+    to_user_id = serializer.validated_data['to_user_id']
+
+    if from_user.id == to_user_id:
+        return Response({
+            'success': False,
+            'message': 'Cannot send friend request to yourself.',
+            'error': 'Cannot send friend request to yourself.'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    to_user = get_object_or_404(Profile, id=to_user_id)
+
+    sent_exists = from_user.sent_friend_requests.filter(to_user=to_user).exists()
+    received_exists = from_user.received_friend_requests.filter(from_user=to_user).exists()
+
+    if sent_exists or received_exists:
+        return Response({
+            'success': False,
+            'message': 'A friend request or friendship already exists.',
+            'error': 'A friend request or friendship already exists.'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    friend_request = FriendRequest.objects.create(
+        from_user=from_user,
+        to_user=to_user
+    )
+
+    return Response({
+        'success': True,
+        'message': 'Friend request sent successfully.',
+        'data': FriendRequestSerializer(friend_request).data
+    },
+        status=status.HTTP_201_CREATED
+    )
+
+@extend_schema(
+    request=AcceptFriendRequestSerializer,
+    responses={200: FriendRequestSerializer}
+)
+@api_view(['POST'])
+def accept_friend_request(request):
+    serializer = AcceptFriendRequestSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+
+    friend_request = get_object_or_404(
+        FriendRequest,
+        id=serializer.validated_data['request_id']
+    )
+
+    if friend_request.to_user != request.user.profile:
+        return Response({
+            'success': False,
+            'message': 'You cannot accept this request.',
+            'error': 'You cannot accept this request.'},
+            status=status.HTTP_403_FORBIDDEN
+        )
+
+    if friend_request.accepted:
+        return Response(
+            {'success': False,
+            'message': 'Friend request already accepted.',
+            'error': 'Friend request already accepted.'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    friend_request.accepted = True
+    friend_request.save()
+
+    return Response({
+        'success': True,
+        'message': 'Friend request accepted successfully.',
+        'data': FriendRequestSerializer(friend_request).data},
+        status=status.HTTP_200_OK
+    )
+
+@extend_schema(
+    responses={200: FriendRequestSerializer(many=True)}
+)
+@api_view(['GET'])
+def list_pending_requests(request):
+    """
+    Returns all pending friend requests received by the authenticated user.
+    """
+    pending_requests = FriendRequest.objects.filter(
+        to_user=request.user.profile,
+        accepted=False
+    )
+
+    return Response({
+        'success': True,
+        'message': 'Pending friend requests retrieved successfully.',
+        'data': FriendRequestSerializer(pending_requests, many=True).data},
+        status=status.HTTP_200_OK
+    )
+
+@extend_schema(
+    responses={200: ProfileSerializer(many=True)}
+)
+@api_view(['GET'])
+def list_friends(request):
+    profile = request.user.profile
+
+    sent_accepted = profile.sent_friend_requests.filter(accepted=True)
+    received_accepted = profile.received_friend_requests.filter(accepted=True)
+
+    friends = []
+    friends.extend([fr.to_user for fr in sent_accepted])
+    friends.extend([fr.from_user for fr in received_accepted])
+
+    return Response({
+        'success': True,
+        'message': 'Friends list retrieved successfully.',
+        'data': ProfileSerializer(friends, many=True).data},
+        status=status.HTTP_200_OK
+    )
+
+
+@api_view(['DELETE'])
+def reject_friend_request(request, request_id):
+    friend_request = get_object_or_404(
+        FriendRequest,
+        id=request_id,
+    )
+
+    if friend_request.to_user != request.user.profile:
+        return Response({
+            'success': False,
+            'message': 'You cannot reject this request.',
+            'error': 'You cannot reject this request.'},
+            status=status.HTTP_403_FORBIDDEN
+        )
+
+    if friend_request.accepted:
+        return Response({
+            'success': False,
+            'message': 'Friend request already accepted.',
+            'error': 'Friend request already accepted.'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    friend_request.delete()
+    return Response({
+        'success': True,
+        'message': 'Friend request rejected successfully.',
+        'error': None
+    }, status=status.HTTP_200_OK)

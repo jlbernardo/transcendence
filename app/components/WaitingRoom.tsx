@@ -42,6 +42,7 @@ interface WaitingRoomProps {
   roomId: string;
   playerNumber: 1 | 2;
   onReady: () => void;
+  onLeave: () => void;
   opponentJoined: boolean;
   myReady: boolean;
   opponentReady: boolean;
@@ -51,12 +52,24 @@ export function WaitingRoom({
   roomId,
   playerNumber,
   onReady,
+  onLeave,
   opponentJoined,
   myReady,
   opponentReady,
 }: WaitingRoomProps) {
+  const handleGoBack = () => {
+    onLeave();
+  };
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
+      <button
+        onClick={handleGoBack}
+        className="absolute top-6 left-6 px-4 py-2 bg-fuchsia-950/80 hover:bg-fuchsia-950 text-amber-100 font-semibold rounded-lg transition-colors"
+      >
+        Go Back
+      </button>
+
       <h2 className="text-4xl font-bold mb-8 text-amber-400">Waiting Room</h2>
 
       <div className="bg-black/70 rounded-lg py-8 px-15 mb-8">
@@ -65,21 +78,49 @@ export function WaitingRoom({
           <div className="text-4xl font-mono font-bold tracking-widest text-amber-300 mb-5 ml-3">
             {roomId}
             <button
-              onClick={() => {
-              navigator.clipboard.writeText(roomId);
-              const copy = document.getElementById('copy-icon');
-              const toast = document.getElementById('toast-icon');
-                if (copy && toast) {
-                toast.classList.remove('invisible', 'opacity-0');
-                toast.classList.add('opacity-100', 'transition-opacity', 'duration-300');
-                copy.classList.add('invisible', 'opacity-0');
-                copy.classList.remove('opacity-100');
-                setTimeout(() => {
-                  copy.classList.remove('invisible', 'opacity-0');
-                  copy.classList.add('opacity-100', 'transition-opacity', 'duration-300');
-                  toast.classList.add('invisible', 'opacity-0');
-                  toast.classList.remove('opacity-100');
-                }, 1000);
+              onClick={async () => {
+                let success = false;
+                
+                if (navigator.clipboard && window.isSecureContext) {
+                  try {
+                    await navigator.clipboard.writeText(roomId);
+                    success = true;
+                  } catch {
+                    success = false;
+                  }
+                }
+                if (!success) {
+                  const textArea = document.createElement('textarea');
+                  textArea.value = roomId;
+                  textArea.style.position = 'fixed';
+                  textArea.style.left = '-9999px';
+                  textArea.style.top = '-9999px';
+                  document.body.appendChild(textArea);
+                  textArea.focus();
+                  textArea.select();
+                  try {
+                    success = document.execCommand('copy');
+                  } catch {
+                    success = false;
+                  }
+                  document.body.removeChild(textArea);
+                }
+
+                if (success) {
+                  const copy = document.getElementById('copy-icon');
+                  const toast = document.getElementById('toast-icon');
+                  if (copy && toast) {
+                    toast.classList.remove('invisible', 'opacity-0');
+                    toast.classList.add('opacity-100', 'transition-opacity', 'duration-300');
+                    copy.classList.add('invisible', 'opacity-0');
+                    copy.classList.remove('opacity-100');
+                    setTimeout(() => {
+                      copy.classList.remove('invisible', 'opacity-0');
+                      copy.classList.add('opacity-100', 'transition-opacity', 'duration-300');
+                      toast.classList.add('invisible', 'opacity-0');
+                      toast.classList.remove('opacity-100');
+                    }, 1000);
+                  }
                 }
               }}
               className="ml-2 inline-flex items-center justify-center w-5 h-5 rounded hover:bg-amber-400/20 transition-colors relative"

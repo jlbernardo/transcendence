@@ -52,3 +52,17 @@ body {
         transform: translateY(0);
     }
 }
+
+@keyframes ball-y {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-48px);
+  }
+}
+
+.animate-ball-y {
+  animation: ball-y 0.8s ease-in-out infinite;
+}

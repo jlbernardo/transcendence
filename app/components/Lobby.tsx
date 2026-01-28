@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { GameInstructions } from "@/components/GameInstructions";
+import { LoadingPong } from "./LoadingPong";
 
 interface LobbyProps {
   onCreateRoom: () => void;
@@ -29,13 +31,21 @@ export function Lobby({
     return (
       <div className="flex flex-col items-center justify-center min-h-screen">
         <div className="text-2xl mb-4">Connecting to server...</div>
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-100"></div>
+        {/* <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-100"></div> */}
+        <LoadingPong visible={true}/>
       </div>
     );
   }
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen text-amber-100">
+      <Link
+        href="/home"
+        className="absolute top-6 left-6 px-4 py-2 bg-fuchsia-950/80 hover:bg-fuchsia-950 text-amber-100 font-semibold rounded-lg transition-colors"
+      >
+        Go Back
+      </Link>
+
       <h1 className="text-6xl font-bold mb-12 text-amber-200">1 vs 1</h1>
 
       {error && (

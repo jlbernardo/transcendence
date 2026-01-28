@@ -3,7 +3,7 @@ const nextConfig = {
     return [
       {
         source: '/ws',
-        destination: 'http://localhost:3002/ws',
+        destination: process.env.GAME_SERVICE_URL || 'http://game_service:3002/ws',
       },
     ];
   },
