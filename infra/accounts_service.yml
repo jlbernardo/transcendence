@@ -1,5 +1,4 @@
 version: 2
-authtoken: 31ZN8je7Gz1VwB96jp6ljpLfATm_6zfJHDU1miPTNH4AifVnZ
 tunnels:
   backend:
     addr: accounts_service:8000

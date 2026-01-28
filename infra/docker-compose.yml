@@ -41,16 +41,12 @@ services:
     build:
       context: ..
       dockerfile: infra/ngrok.Dockerfile
-      args:
-        - NGROK_CONFIG=infra/accounts_service.yml
     image: ngrok_accounts_service
     container_name: ngrok_accounts_service
     environment:
-      - NGROK_AUTHTOKEN=31ZN8je7Gz1VwB96jp6ljpLfATm_6zfJHDU1miPTNH4AifVnZ
+      - NGROK_AUTHTOKEN=${NGROK_AUTHTOKEN}
     ports:
-      - "4041:4040"
-    volumes:
-      - ../infra/accounts_service.yml:/app/ngrok.yml:ro
+      - "4040:4040"
     depends_on:
       - accounts_service
     restart: always
