@@ -1,5 +1,5 @@
 import { api } from "@/lib/axios_instance";
-import { Profile } from "@/types/user";
+import { Profile, FriendListResponse } from "@/types/user";
 
 export async function getProfile() {
     const response = await api.get<Profile>("/profile/")
@@ -24,5 +24,10 @@ export async function putAvatar(file: File) {
 
 export async function deleteAvatar() {
     const response = await api.delete<any>("/profile/avatar/")
+    return response.data
+}
+
+export async function getAllActiveUsers() {
+    const response = await api.get<FriendListResponse>("/profile/all/")
     return response.data
 }

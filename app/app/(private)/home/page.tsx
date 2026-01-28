@@ -100,7 +100,7 @@ export default function Home() {
           </Button>
 
           <Button
-            onClick={() => {setIsModalOpen(true); setMessage("Find new friends feature coming soon!")}}
+            onClick={() => router.push('/friends?tab=find')}
             className="cursor-pointer row-span-1 row-start-10 col-span-2 mb-12">
             <div className="flex flex-col items-center">
               <Image src="/search.svg" alt="find new friends" width={100} height={100} />
