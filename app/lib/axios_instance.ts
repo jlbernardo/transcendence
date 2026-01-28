@@ -5,6 +5,7 @@ export const api = axios.create({
   baseURL: 'https://nonsilicious-ulteriorly-tu.ngrok-free.dev/api/',
   headers: {
     'Content-Type': 'application/json',
+    'ngrok-skip-browser-warning': 'true'
   },
 });
 
