@@ -11,4 +11,3 @@ EXPOSE 4040
 
 # Comando padrão
 CMD ["start", "--all", "--config", "/app/ngrok.yml"]
-#CMD ["sleep", "infinity"]
