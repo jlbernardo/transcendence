@@ -42,6 +42,7 @@ interface WaitingRoomProps {
   roomId: string;
   playerNumber: 1 | 2;
   onReady: () => void;
+  onLeave: () => void;
   opponentJoined: boolean;
   myReady: boolean;
   opponentReady: boolean;
@@ -51,12 +52,24 @@ export function WaitingRoom({
   roomId,
   playerNumber,
   onReady,
+  onLeave,
   opponentJoined,
   myReady,
   opponentReady,
 }: WaitingRoomProps) {
+  const handleGoBack = () => {
+    onLeave();
+  };
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
+      <button
+        onClick={handleGoBack}
+        className="absolute top-6 left-6 px-4 py-2 bg-fuchsia-950/80 hover:bg-fuchsia-950 text-amber-100 font-semibold rounded-lg transition-colors"
+      >
+        Go Back
+      </button>
+
       <h2 className="text-4xl font-bold mb-8 text-amber-400">Waiting Room</h2>
 
       <div className="bg-black/70 rounded-lg py-8 px-15 mb-8">

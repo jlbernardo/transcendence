@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 interface GameOverProps {
   winner: 1 | 2;
   playerNumber: 1 | 2;
@@ -21,12 +23,20 @@ export function GameOver({ winner, playerNumber, onPlayAgain }: GameOverProps) {
         Player {winner} wins the game!
       </div>
 
-      <button
-        onClick={onPlayAgain}
-        className="px-8 py-4 bg-fuchsia-950 hover:bg-fuchsia-900/80 text-amber-100 text-xl font-semibold rounded-lg transition-colors"
-      >
-        Play Again
-      </button>
+      <div className="flex gap-4">
+        <Link
+          href="/home"
+          className="px-8 py-4 bg-amber-500/80 hover:bg-amber-500 text-amber-100 text-xl font-semibold rounded-lg transition-colors"
+        >
+          Go Back
+        </Link>
+        <button
+          onClick={onPlayAgain}
+          className="px-8 py-4 bg-fuchsia-950 hover:bg-fuchsia-900/80 text-amber-100 text-xl font-semibold rounded-lg transition-colors"
+        >
+          Play Again
+        </button>
+      </div>
     </div>
   );
 }
