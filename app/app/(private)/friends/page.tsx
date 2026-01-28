@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Header from "@/components/Header";
+import NgrokImage from "@/components/NgrokImage";
 import { getFriendsList } from "@/services/friendship";
 
 interface Friend {
@@ -69,15 +70,12 @@ const FriendsPage = () => {
                   >
                     {/* Avatar */}
                     <div className="w-16 h-16 bg-[#4a90e2] border-4 border-[#1a1a1a] rounded-lg overflow-hidden flex items-center justify-center">
-                      {friend.avatar ? (
-                        <img
-                          src={`http://localhost:8000${friend.avatar}`}
-                          alt="Avatar"
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <span className="text-3xl">🐱</span>
-                      )}
+                      <NgrokImage
+                        src={friend.avatar}
+                        alt="Avatar"
+                        className="w-full h-full object-cover"
+                        fallback={<span className="text-3xl">🐱</span>}
+                      />
                     </div>
 
                     {/* Infos */}

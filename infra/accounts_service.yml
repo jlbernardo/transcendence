@@ -1,0 +1,6 @@
+version: 2
+tunnels:
+  backend:
+    addr: accounts_service:8000
+    proto: http
+    domain: nonsilicious-ulteriorly-tu.ngrok-free.dev

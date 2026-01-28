@@ -1,5 +1,7 @@
 services:
   app:
+    networks:
+      - transcendence_network
     build:
       context: ../app
       dockerfile: ../infra/app.Dockerfile
@@ -16,6 +18,8 @@ services:
     restart: always
 
   accounts_service:
+    networks:
+      - transcendence_network
     build:
       context: ..
       dockerfile: infra/accounts_service.Dockerfile
@@ -28,6 +32,8 @@ services:
     restart: always
 
   game_service:
+    networks:
+      - transcendence_network
     build:
       context: ..
       dockerfile: infra/game_service.Dockerfile
@@ -36,3 +42,24 @@ services:
     environment:
       - DEBUG=False
     restart: always
+
+  ngrok_accounts_service:
+    networks: 
+      - transcendence_network
+    build:
+      context: ..
+      dockerfile: infra/ngrok.Dockerfile
+    image: ngrok_accounts_service
+    container_name: ngrok_accounts_service
+    environment:
+      - NGROK_AUTHTOKEN=${NGROK_AUTHTOKEN}
+    ports:
+      - "4040:4040"
+    depends_on:
+      - accounts_service
+    restart: always
+
+networks:
+  transcendence_network:
+    driver: bridge
+    name: transcendence_network

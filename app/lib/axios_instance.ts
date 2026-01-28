@@ -2,9 +2,10 @@ import axios from 'axios';
 import { useUserStore } from '@/store/userStore';
 
 export const api = axios.create({
-  baseURL: 'http://localhost:8000/api/',
+  baseURL: 'https://nonsilicious-ulteriorly-tu.ngrok-free.dev/api/',
   headers: {
     'Content-Type': 'application/json',
+    'ngrok-skip-browser-warning': 'true'
   },
 });
 
