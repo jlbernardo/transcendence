@@ -78,21 +78,49 @@ export function WaitingRoom({
           <div className="text-4xl font-mono font-bold tracking-widest text-amber-300 mb-5 ml-3">
             {roomId}
             <button
-              onClick={() => {
-              navigator.clipboard.writeText(roomId);
-              const copy = document.getElementById('copy-icon');
-              const toast = document.getElementById('toast-icon');
-                if (copy && toast) {
-                toast.classList.remove('invisible', 'opacity-0');
-                toast.classList.add('opacity-100', 'transition-opacity', 'duration-300');
-                copy.classList.add('invisible', 'opacity-0');
-                copy.classList.remove('opacity-100');
-                setTimeout(() => {
-                  copy.classList.remove('invisible', 'opacity-0');
-                  copy.classList.add('opacity-100', 'transition-opacity', 'duration-300');
-                  toast.classList.add('invisible', 'opacity-0');
-                  toast.classList.remove('opacity-100');
-                }, 1000);
+              onClick={async () => {
+                let success = false;
+                
+                if (navigator.clipboard && window.isSecureContext) {
+                  try {
+                    await navigator.clipboard.writeText(roomId);
+                    success = true;
+                  } catch {
+                    success = false;
+                  }
+                }
+                if (!success) {
+                  const textArea = document.createElement('textarea');
+                  textArea.value = roomId;
+                  textArea.style.position = 'fixed';
+                  textArea.style.left = '-9999px';
+                  textArea.style.top = '-9999px';
+                  document.body.appendChild(textArea);
+                  textArea.focus();
+                  textArea.select();
+                  try {
+                    success = document.execCommand('copy');
+                  } catch {
+                    success = false;
+                  }
+                  document.body.removeChild(textArea);
+                }
+
+                if (success) {
+                  const copy = document.getElementById('copy-icon');
+                  const toast = document.getElementById('toast-icon');
+                  if (copy && toast) {
+                    toast.classList.remove('invisible', 'opacity-0');
+                    toast.classList.add('opacity-100', 'transition-opacity', 'duration-300');
+                    copy.classList.add('invisible', 'opacity-0');
+                    copy.classList.remove('opacity-100');
+                    setTimeout(() => {
+                      copy.classList.remove('invisible', 'opacity-0');
+                      copy.classList.add('opacity-100', 'transition-opacity', 'duration-300');
+                      toast.classList.add('invisible', 'opacity-0');
+                      toast.classList.remove('opacity-100');
+                    }, 1000);
+                  }
                 }
               }}
               className="ml-2 inline-flex items-center justify-center w-5 h-5 rounded hover:bg-amber-400/20 transition-colors relative"
