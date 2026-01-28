@@ -88,7 +88,7 @@ const ProfileCard = () => {
             <div className="relative w-32 h-32 bg-[#4a90e2] border-4 border-[#1a1a1a] rounded-lg flex items-center justify-center overflow-hidden group">
               {profile?.avatar ? (
                 <img
-                  src={`http://localhost:8000${profile.avatar}`}
+                  src={`https://nonsilicious-ulteriorly-tu.ngrok-free.dev/${profile.avatar}`}
                   alt="Avatar"
                   className="w-full h-full object-cover"
                 />
