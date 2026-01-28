@@ -24,10 +24,10 @@
 
 | Member | Login | Role(s) | Responsibilities |
 |--------|-------|---------|------------------|
-| Sabrina Ferreira | **sabrifer** | Developer & Technical Lead | Technical architecture decisions, code quality oversight, technology stack selection, critical code reviews |
-| Juliany Bernardo | **julberna** | Developer & Product Owner | Product vision definition, feature prioritization, backlog maintenance, stakeholder communication, user needs validation |
-| Marcela Gonzaga | **mgonzaga** | Developer & Project Manager | Team coordination, meeting organization, progress tracking, risk management, deadline oversight |
-| Natali Moreira | **namoreir** | Developer | Feature implementation, code reviews, testing, documentation |
+| Sabrina Nascimento | **sabrifer** | Developer & Technical Lead | Technical architecture decisions, code quality oversight, technology stack selection, critical code reviews, frequent pair programming |
+| Juliany Bernardo | **julberna** | Developer & Product Owner | Product vision definition, feature prioritization, backlog maintenance, stakeholder communication, user needs validation, frequent pair programming |
+| Marcela Gonzaga | **mgonzaga** | Developer & Project Manager | Team coordination, meeting organization, progress tracking, risk management, deadline oversight, frequent pair programming |
+| Natali Moreira | **namoreir** | Developer & DevOps | Feature implementation, code reviews, testing, documentation, CI/CD pipelines, Docker & Compose setup, infrastructure automation, frequent pair programming |
 
 ---
 
@@ -39,8 +39,10 @@ The team adopted an agile approach with clear task distribution:
 
 - **Task Management**: Project broken down into specific tasks tracked via GitHub Issues
 - **Meetings**: Biweekly meetings held on Discord to sync progress, discuss blockers, and plan next steps
+- **Pair Programming**: We frequently used pair programming sessions to solve complex problems, share knowledge, and improve code quality. For remote collaboration, we used Visual Studio Code + Live Share.
 - **Code Reviews**: All major changes reviewed by at least one team member before merging
 - **Version Control**: Git workflow with feature branches and pull requests
+
 
 ### Tools Used
 
@@ -48,6 +50,7 @@ The team adopted an agile approach with clear task distribution:
 - **Discord**: Team communication and biweekly meetings
 - **Git/GitHub**: Version control and collaboration
 - **Docker Compose**: Development environment orchestration
+- **Visual Studio Code + Live Share**: Real-time collaborative coding sessions for pair programming
 
 ---
 
