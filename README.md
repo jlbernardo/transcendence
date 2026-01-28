@@ -231,7 +231,7 @@ No persistent game history is stored (focus on real-time gameplay).
 
 2. **Real-time Features Using WebSockets** (2 points)
    - **Description**: Implemented bidirectional real-time communication for live multiplayer gameplay
-   - **Implemented by**: julberna (backend), julberna & mgonzaga (frontend)
+   - **Implemented by**: julberna (backend and frontend)
    - **Implementation**:
      - WebSocket server using `ws` library (Node.js)
      - Real-time game state synchronization at 60 FPS
@@ -243,7 +243,7 @@ No persistent game history is stored (focus on real-time gameplay).
 
 3. **Public API with Security and Documentation** (2 points)
    - **Description**: RESTful API with authentication, rate limiting, and comprehensive documentation
-   - **Implemented by**: sabrifer, namoreir
+   - **Implemented by**: sabrifer
    - **Implementation**:
      - **Authentication**: Token-based authentication (Django REST Framework TokenAuth)
      - **Rate Limiting**: 
@@ -269,7 +269,7 @@ No persistent game history is stored (focus on real-time gameplay).
 
 4. **Standard User Management and Authentication** (2 points)
    - **Description**: Complete user lifecycle management with secure authentication
-   - **Implemented by**: sabrifer, namoreir
+   - **Implemented by**: sabrifer, mgonzaga, namoreir
    - **Implementation**:
      - Custom user model extending Django's AbstractUser
      - Email-based authentication (email as USERNAME_FIELD)
@@ -297,7 +297,7 @@ No persistent game history is stored (focus on real-time gameplay).
 
 6. **Remote Players - Real-time Multiplayer** (2 points)
    - **Description**: Two players on separate computers play together in real-time
-   - **Implemented by**: julberna (backend), julberna & mgonzaga (frontend)
+   - **Implemented by**: Full team
    - **Implementation**:
      - Room-based matchmaking with unique 6-character codes
      - WebSocket connections for each player
@@ -311,7 +311,7 @@ No persistent game history is stored (focus on real-time gameplay).
 
 7. **Backend as Microservices** (2 points)
    - **Description**: Application split into independent, specialized services
-   - **Implemented by**: Full team architecture, namoreir (Docker orchestration)
+   - **Implemented by**: sabrifer arcarchitecture, full team in Docker orchestration
    - **Implementation**:
      - **3 separate services**:
        1. **app** (Frontend): Next.js application (port 3000)
@@ -331,7 +331,7 @@ No persistent game history is stored (focus on real-time gameplay).
 
 1. **Use an ORM for Database** (1 point)
    - **Description**: Object-Relational Mapping for type-safe database operations
-   - **Implemented by**: sabrifer, namoreir
+   - **Implemented by**: sabrifer
    - **Implementation**:
      - Django ORM for Accounts Service
      - Models: CustomUser, Profile, FriendRequest
@@ -344,7 +344,7 @@ No persistent game history is stored (focus on real-time gameplay).
 
 2. **Server-Side Rendering (SSR)** (1 point)
    - **Description**: Next.js SSR for improved performance and SEO
-   - **Implemented by**: julberna, mgonzaga
+   - **Implemented by**: julberna
    - **Implementation**:
      - Next.js App Router with React Server Components
      - Initial HTML rendered on server
@@ -357,7 +357,7 @@ No persistent game history is stored (focus on real-time gameplay).
 
 3. **Custom Design System** (1 point)
    - **Description**: Reusable component library with consistent styling
-   - **Implemented by**: julberna, mgonzaga
+   - **Implemented by**: julberna
    - **Implementation**:
      - **Color Palette**: 
        - Primary: Amber/Gold tones (amber-200, amber-100)
@@ -385,7 +385,7 @@ No persistent game history is stored (focus on real-time gameplay).
 
 4. **Support for Additional Browsers** (1 point)
    - **Description**: Cross-browser compatibility and responsive design
-   - **Implemented by**: julberna, mgonzaga
+   - **Implemented by**: julberna
    - **Implementation**:
      - Tested on: Chrome, Firefox, Safari, Edge
      - Responsive breakpoints (mobile, tablet, desktop)
@@ -423,7 +423,7 @@ No persistent game history is stored (focus on real-time gameplay).
 
 ---
 
-### Juliany Bernardes (julberna) - Product Owner & Full-Stack Developer
+### Juliany Bernardo (julberna) - Product Owner & Full-Stack Developer
 **Areas of responsibility:**
 - **Frontend Development**:
   - Next.js frontend application setup and configuration
@@ -486,6 +486,7 @@ No persistent game history is stored (focus on real-time gameplay).
 - Docker configuration for all services (app, accounts_service, game_service)
 - Docker Compose orchestration setup
 - Backend code reviews and debugging
+- Documentation
 
 **Challenges faced:**
 - **Learning Python and Django**: Coming from other programming backgrounds, had to learn Python syntax, Django framework conventions, the ORM system, and Django REST Framework. Solution: studied Django documentation extensively, worked through tutorials, and built prototypes before implementing main features.
@@ -597,9 +598,6 @@ The repository includes a `.env.example` file with all required variables (witho
 cp .env.example .env
 # Then edit .env with your actual values
 ```
-
-⚠️ **Security Note**: The `.env` file is included in `.gitignore` and should **never** be committed to Git.
-
 ### API Documentation
 
 The Accounts Service API is documented at:
@@ -737,7 +735,6 @@ AI tools (primarily GitHub Copilot, Gemini and ChatGPT) were used strategically 
 - Game state is not persisted (no match history)
 - Single database per service (SQLite - not suitable for high-scale production)
 - No reconnection handling for dropped WebSocket connections during games
-- Avatar functionality is partially implemented (commented out in models)
 - No chat system implemented yet
 - No leaderboard/statistics tracking across sessions
 
@@ -749,10 +746,8 @@ AI tools (primarily GitHub Copilot, Gemini and ChatGPT) were used strategically 
 - Add tournament mode
 - Implement chat system
 - Add AI opponent option
-- Migrate to PostgreSQL for production
 - Implement WebSocket reconnection logic
 - Add spectator mode for ongoing games
-- Implement matchmaking system
 
 ---
 
