@@ -178,9 +178,10 @@ MEDIA_URL = '/images/' # url to see images
 
 # CORS settings for Next.js dev server
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "https://nonsilicious-ulteriorly-tu.ngrok-free.dev"
+    "*",
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOW_CREDENTIALS = False
 
@@ -191,4 +192,5 @@ CORS_ALLOW_HEADERS = [
     'content-type',
     'origin',
     'user-agent',
+    'ngrok-skip-browser-warning',
 ]
