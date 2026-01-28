@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from "next/link";
 import Header from "@/components/Header";
+import NgrokImage from "@/components/NgrokImage";
 import { useUserStore } from '@/store/userStore';
 import { getFriendsList } from '@/services/friendship';
 import { putProfile, putAvatar, deleteAvatar } from '@/services/profile';
@@ -86,15 +87,12 @@ const ProfileCard = () => {
           {/* Topo: Avatar e Informações */}
           <div className="flex flex-wrap gap-6 mb-6">
             <div className="relative w-32 h-32 bg-[#4a90e2] border-4 border-[#1a1a1a] rounded-lg flex items-center justify-center overflow-hidden group">
-              {profile?.avatar ? (
-                <img
-                  src={`https://nonsilicious-ulteriorly-tu.ngrok-free.dev/${profile.avatar}`}
-                  alt="Avatar"
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <span className="text-6xl">🐱</span>
-              )}
+              <NgrokImage
+                src={profile?.avatar}
+                alt="Avatar"
+                className="w-full h-full object-cover"
+                fallback={<span className="text-6xl">🐱</span>}
+              />
               
               {/* Overlay com botões */}
               <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2">

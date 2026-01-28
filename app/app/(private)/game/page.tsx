@@ -13,11 +13,7 @@ type AppState = "lobby" | "waiting" | "playing" | "gameover";
 function getWebSocketUrl() {
   if (typeof window === "undefined") return "";
 
-  const isDev = process.env.NODE_ENV === "development";
-  if (isDev)
-    return `ws://${window.location.hostname}:3002/ws`;
-
-  return `ws://${window.location.host}/ws`;
+  return `ws://${window.location.hostname}:3002/ws`;
 }
 
 export default function Home() {
