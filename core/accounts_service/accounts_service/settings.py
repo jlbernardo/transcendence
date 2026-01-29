@@ -176,11 +176,6 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 MEDIA_ROOT =  os.path.join(BASE_DIR, 'images') # path to store images
 MEDIA_URL = '/images/' # url to see images
 
-# CORS settings for Next.js dev server
-CORS_ALLOWED_ORIGINS = [
-    "*",
-]
-
 CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOW_CREDENTIALS = False
