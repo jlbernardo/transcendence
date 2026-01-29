@@ -1,5 +1,6 @@
 # Ignore environment variables
 infra/.env
+
 # Vscode
 .vscode/
 
@@ -16,3 +17,5 @@ infra/.env
 *.pyo
 *.pyd
 
+# database
+*.sqlite3

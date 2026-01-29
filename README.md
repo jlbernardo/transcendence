@@ -24,10 +24,10 @@
 
 | Member | Login | Role(s) | Responsibilities |
 |--------|-------|---------|------------------|
-| Sabrina Ferreira | **sabrifer** | Developer & Technical Lead | Technical architecture decisions, code quality oversight, technology stack selection, critical code reviews |
-| Juliany Bernardo | **julberna** | Developer & Product Owner | Product vision definition, feature prioritization, backlog maintenance, stakeholder communication, user needs validation |
-| Marcela Gonzaga | **mgonzaga** | Developer & Project Manager | Team coordination, meeting organization, progress tracking, risk management, deadline oversight |
-| Natali Moreira | **namoreir** | Developer | Feature implementation, code reviews, testing, documentation |
+| Sabrina Nascimento | **sabrifer** | Developer & Technical Lead | Technical architecture decisions, code quality oversight, technology stack selection, critical code reviews, frequent pair programming |
+| Juliany Bernardo | **julberna** | Developer & Product Owner | Product vision definition, feature prioritization, backlog maintenance, stakeholder communication, user needs validation, frequent pair programming |
+| Marcela Gonzaga | **mgonzaga** | Developer & Project Manager | Team coordination, meeting organization, progress tracking, risk management, deadline oversight, frequent pair programming |
+| Natali Moreira | **namoreir** | Developer & DevOps | Feature implementation, code reviews, testing, documentation, CI/CD pipelines, Docker & Compose setup, infrastructure automation, frequent pair programming |
 
 ---
 
@@ -37,17 +37,20 @@
 
 The team adopted an agile approach with clear task distribution:
 
-- **Task Management**: Project broken down into specific tasks tracked via GitHub Issues
+- **Task Management**: Project broken down into specific tasks tracked via GitHub Projects
 - **Meetings**: Biweekly meetings held on Discord to sync progress, discuss blockers, and plan next steps
+- **Pair Programming**: We frequently used pair programming sessions to solve complex problems, share knowledge, and improve code quality. For remote collaboration, we used Visual Studio Code + Live Share.
 - **Code Reviews**: All major changes reviewed by at least one team member before merging
 - **Version Control**: Git workflow with feature branches and pull requests
 
+
 ### Tools Used
 
-- **GitHub Issues**: Task tracking and assignment
+- **GitHub Projects**: Task tracking and assignment
 - **Discord**: Team communication and biweekly meetings
 - **Git/GitHub**: Version control and collaboration
 - **Docker Compose**: Development environment orchestration
+- **Visual Studio Code + Live Share**: Real-time collaborative coding sessions for pair programming
 
 ---
 
@@ -179,34 +182,34 @@ No persistent game history is stored (focus on real-time gameplay).
 
 ## Features List
 
-### Authentication & User Management (Backend Team)
-- **User Registration** - Complete signup with email validation and password requirements *(sabrifer)*
-- **User Login/Logout** - Token-based authentication with secure session management *(sabrifer)*
-- **User Profile** - View and edit user bio and profile information *(sabrifer)*
-- **Avatar Upload** - Profile picture upload and management *(sabrifer)*
+### Authentication & User Management (Backend Team) *(sabrifer)*
+- **User Registration** - Complete signup with email validation and password requirements
+- **User Login/Logout** - Token-based authentication with secure session management
+- **User Profile** - View and edit user bio and profile information
+- **Avatar Upload** - Profile picture upload and management
 
-### Friend System (Backend Team)
-- **Send Friend Requests** - Search and send requests to other users *(sabrifer, namoreir)*
-- **Accept/Reject Requests** - Manage incoming friend requests *(sabrifer, namoreir)*
-- **Friends List** - View all friends with online/offline status *(sabrifer, namoreir)*
-- **Remove Friends** - Unfriend functionality *(sabrifer, namoreir)*
+### Friend System (Backend Team) *(sabrifer, namoreir)*
+- **Send Friend Requests** - Search and send requests to other users
+- **Accept/Reject Requests** - Manage incoming friend requests
+- **Friends List** - View all friends with online/offline status
+- **Remove Friends** - Unfriend functionality
 
-### Game Features (Backend + Frontend)
-- **Real-time Pong Game** - Classic pong mechanics with smooth physics *(Backend Game Service: julberna | Frontend: julberna, mgonzaga)*
-- **Room Creation** - Create private game rooms with unique codes *(Backend Game Service: julberna | Frontend: julberna, mgonzaga)*
-- **Room Joining** - Join existing rooms via code *(Backend Game Service: julberna | Frontend: julberna, mgonzaga)*
-- **Multiplayer Synchronization** - Real-time game state sync via WebSocket *(Backend Game Service: julberna | Frontend: julberna, mgonzaga)*
-- **Score Tracking** - Win detection and score display *(Backend Game Service: julberna | Frontend: julberna, mgonzaga)*
-- **Player Ready System** - Both players must ready up before game starts *(Backend Game Service: julberna | Frontend: julberna, mgonzaga)*
+### Game Features (Backend + Frontend) *(Backend Game Service: julberna | Frontend: julberna, mgonzaga)*
+- **Real-time Pong Game** - Classic pong mechanics with smooth physics 
+- **Room Creation** - Create private game rooms with unique codes
+- **Room Joining** - Join existing rooms via code
+- **Multiplayer Synchronization** - Real-time game state sync via WebSocket
+- **Score Tracking** - Win detection and score display
+- **Player Ready System** - Both players must ready up before game starts
 
-### UI/UX Features (Frontend Team)
-- **Responsive Design** - Works on various screen sizes *(julberna, mgonzaga)*
-- **Dark Theme** - Modern, eye-friendly dark interface *(julberna, mgonzaga)*
-- **Loading States** - User feedback during operations *(julberna, mgonzaga)*
-- **Error Handling** - Clear error messages for users *(julberna, mgonzaga)*
-- **Authentication Pages** - Login, register, and profile pages *(julberna, mgonzaga)*
-- **Game Interface** - Lobby, waiting room, and game canvas *(julberna, mgonzaga)*
-- **Friend Management UI** - Friend list, requests, and status indicators *(julberna, mgonzaga)*
+### UI/UX Features (Frontend Team) *(julberna, mgonzaga)*
+- **Responsive Design** - Works on various screen sizes
+- **Dark Theme** - Modern, eye-friendly dark interface
+- **Loading States** - User feedback during operations
+- **Error Handling** - Clear error messages for users
+- **Authentication Pages** - Login, register, and profile pages
+- **Game Interface** - Lobby, waiting room, and game canvas
+- **Friend Management UI** - Friend list, requests, and status indicators
 
 ---
 
@@ -283,7 +286,7 @@ No persistent game history is stored (focus on real-time gameplay).
 
 5. **Complete Web-Based Game** (2 points)
    - **Description**: Fully functional Pong game playable entirely in the browser
-   - **Implemented by**: julberna (backend + frontend), mgonzaga (frontend)
+   - **Implemented by**: julberna (backend + frontend)
    - **Implementation**:
      - Classic Pong mechanics (ball physics, paddle collision, scoring)
      - Server-authoritative game engine to prevent cheating
@@ -313,10 +316,9 @@ No persistent game history is stored (focus on real-time gameplay).
    - **Description**: Application split into independent, specialized services
    - **Implemented by**: sabrifer arcarchitecture, full team in Docker orchestration
    - **Implementation**:
-     - **3 separate services**:
-       1. **app** (Frontend): Next.js application (port 3000)
-       2. **accounts_service** (Backend): Django REST API for user management (port 8000)
-       3. **game_service** (Backend): Node.js WebSocket server for game logic (port 3002)
+     - **2 separate services**:
+       1. **accounts_service** (Backend): Django REST API for user management (port 8000)
+       2. **game_service** (Backend): Node.js WebSocket server for game logic (port 3002)
      - Each service has its own:
        - Dockerfile (optimized builds)
        - Dependencies (package.json or requirements.txt)
@@ -364,7 +366,7 @@ No persistent game history is stored (focus on real-time gameplay).
        - Secondary: Fuchsia/Purple (fuchsia-950)
        - Background: Black/Dark grays
        - Accents: Green (success), Red (error)
-     - **Typography**: System font stack, responsive sizing
+     - **Typography**: Pixel Font7
      - **10+ Reusable Components**:
        1. Header (navigation with auth state)
        2. Footer (info and links)
@@ -387,7 +389,7 @@ No persistent game history is stored (focus on real-time gameplay).
    - **Description**: Cross-browser compatibility and responsive design
    - **Implemented by**: julberna
    - **Implementation**:
-     - Tested on: Chrome, Firefox, Safari, Edge
+     - Tested on: Chrome, Firefox, Safari, Brave
      - Responsive breakpoints (mobile, tablet, desktop)
      - Modern CSS with fallbacks
      - Polyfills via Next.js automatic transpilation
@@ -449,7 +451,7 @@ No persistent game history is stored (focus on real-time gameplay).
 - **WebSocket Integration**: Understanding bidirectional real-time communication and managing connection states on both client and server side. Solution: studied WebSocket API and ws library documentation, implemented reconnection logic, and handled edge cases.
 - **Node.js Backend Development**: Learning Node.js ecosystem, asynchronous programming with async/await, and Express framework for the game service. Solution: studied Node.js documentation, practiced with Promises, and built prototypes.
 - **Game Physics and Synchronization**: Ensuring smooth gameplay and keeping both clients in sync without lag. Solution: implemented server-authoritative game loop, optimized update frequency (60 FPS), and handled network latency considerations.
-- **Balancing PO and Developer Roles**: Managing feature backlog while also implementing both frontend and backend code. Solution: dedicated specific time blocks for each role and maintained clear communication with the team.
+- **Balancing PO and Developer Roles**: Managing feature backlog while also implementing both frontend and backend code. Solution: task definition and priorization was done in the beginning, so that everybody knew what to do and the focus could be shifted to development afterwards.
 
 ---
 
@@ -468,12 +470,11 @@ No persistent game history is stored (focus on real-time gameplay).
 **Challenges faced:**
 - **Learning React and Next.js**: Understanding component lifecycle, hooks (useState, useEffect), and React patterns. Solution: completed React tutorials, studied component patterns, and practiced with smaller examples.
 - **Tailwind CSS**: Learning utility-first CSS approach instead of traditional CSS. Solution: explored Tailwind documentation, experimented with different utilities, and built a style guide.
-- **Real-time Game Rendering**: Implementing smooth canvas animations and handling game state updates. Solution: researched game loop patterns, requestAnimationFrame, and optimized rendering performance.
 - **Project Management**: Coordinating team schedules and keeping everyone aligned. Solution: established regular meetings, clear communication protocols, and used GitHub Issues effectively for transparency.
 
 ---
 
-### Natali Moreira (namoreir) - Backend Developer
+### Natali Moreira (namoreir) - Backend Developer & DevOps
 **Areas of responsibility:**
 - **Django Accounts Service Backend**:
   - User and Profile models implementation
@@ -492,7 +493,6 @@ No persistent game history is stored (focus on real-time gameplay).
 - **Learning Python and Django**: Coming from other programming backgrounds, had to learn Python syntax, Django framework conventions, the ORM system, and Django REST Framework. Solution: studied Django documentation extensively, worked through tutorials, and built prototypes before implementing main features.
 - **SQL Database and Relationships**: Learning to work with relational databases, designing schemas with foreign keys and one-to-one/many-to-many relationships (User-Profile, FriendRequest). Solution: studied SQL fundamentals, Django ORM documentation, and tested migrations thoroughly.
 - **Django REST Framework**: Understanding serializers, viewsets, and API design patterns. Solution: read DRF documentation, analyzed examples, and implemented endpoints incrementally with testing.
-- **Docker Containerization**: Learning Docker concepts, writing Dockerfiles for different tech stacks (Python, Node.js), and multi-container orchestration with Docker Compose. Solution: studied Docker documentation, experimented with different configurations, and optimized build processes.
 
 ---
 
@@ -541,7 +541,7 @@ Before running the project, ensure you have the following installed:
 
 4. **Access the application:**
    - **Local development**: `http://localhost:3000`
-   - **HTTPS via ngrok**: Use your configured ngrok URL
+   - **Network access**: Use the host machine IP ADDRESS `http://xx.xx.xx.xx:3000/`
 
 ### Available Make Commands
 
@@ -581,7 +581,6 @@ The project uses environment variables stored in a `.env` file for security and 
 - **Security**: Keeps sensitive data (tokens, secret keys) out of version control
 - **Flexibility**: Easy to change configurations per environment (dev, staging, prod)
 - **HTTPS Support**: Ngrok token allows secure HTTPS tunneling for development/testing
-- **CORS Management**: Dynamic origin configuration without code changes
 - **Compliance**: Follows security best practices required by the project specifications
 
 #### Getting Your Ngrok Token
@@ -601,8 +600,8 @@ cp .env.example .env
 ### API Documentation
 
 The Accounts Service API is documented at:
-- **Swagger UI**: `http://localhost:8000/api/schema/swagger-ui/`
-- **ReDoc**: `http://localhost:8000/api/schema/redoc/`
+- **Swagger UI**: `http://localhost:8000/api/schema/`
+- **ReDoc**: `http://localhost:8000/api/docs/`
 - **API Documentation**: See `/core/accounts_service/API_DOCUMENTATION.md`
 
 ### Development Workflow
@@ -622,12 +621,7 @@ The Accounts Service API is documented at:
    docker compose -f infra/docker-compose.yml exec accounts_service python manage.py migrate
    ```
 
-4. **Create Django superuser:**
-   ```bash
-   docker compose -f infra/docker-compose.yml exec accounts_service python manage.py createsuperuser
-   ```
-
-5. **Stop services:**
+4. **Stop services:**
    ```bash
    make down
    ```
@@ -709,6 +703,7 @@ AI tools (primarily GitHub Copilot, Gemini and ChatGPT) were used strategically 
 - **Backend (Django)**: Authentication flow logic, serializer validation, ORM queries, test case structure
 - **Backend (Game Service)**: WebSocket event handlers, game loop optimization, TypeScript type definitions
 - **Frontend**: React component patterns, state management with Zustand, WebSocket client implementation
+- **UI/UX design**: Visual design, user flows, and interface layouts were enhanced by Sora.
 - **Infrastructure**: Docker configuration best practices, docker-compose service orchestration
 - **Testing**: Test case generation for user authentication, profile, and friendship features
 - **Documentation**: API documentation structure, README organization, code comments
@@ -718,7 +713,6 @@ AI tools (primarily GitHub Copilot, Gemini and ChatGPT) were used strategically 
 - **Core architecture decisions**: The microservices architecture, technology stack selection, and overall system design were decided by the team
 - **Business logic implementation**: The game physics, scoring system, friend request logic, and authentication workflows were designed and implemented by team members
 - **Database schema design**: Table relationships, field choices, and data models were created by the team
-- **UI/UX design**: Visual design, user flows, and interface layouts were decided by the team
 - **Project planning**: Feature prioritization, sprint planning, and task distribution were managed by the team
 
 **How AI enhanced our workflow:**
@@ -732,11 +726,7 @@ AI tools (primarily GitHub Copilot, Gemini and ChatGPT) were used strategically 
 
 ## Known Limitations
 
-- Game state is not persisted (no match history)
-- Single database per service (SQLite - not suitable for high-scale production)
-- No reconnection handling for dropped WebSocket connections during games
-- No chat system implemented yet
-- No leaderboard/statistics tracking across sessions
+- Blackhole
 
 ---
 
@@ -753,7 +743,7 @@ AI tools (primarily GitHub Copilot, Gemini and ChatGPT) were used strategically 
 
 ## License
 
-This project is part of the 42 School curriculum and follows their academic policies.
+GNU GENERAL PUBLIC LICENSE Version 3
 
 ---
 
